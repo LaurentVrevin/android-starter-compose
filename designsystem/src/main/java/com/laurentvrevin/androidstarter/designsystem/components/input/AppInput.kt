@@ -3,7 +3,7 @@ package com.laurentvrevin.androidstarter.designsystem.components.input
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.style.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.laurentvrevin.androidstarter.designsystem.styles.*
@@ -20,7 +20,7 @@ fun AppInput(
     errorMessage: String? = null,
     style: Style? = null
 ) {
-    val inputStyle = style ?: LocalInputStyles.current.default()
+    val inputStyle = style ?: AppTheme.inputStyles.default()
     val spacing = AppTheme.spacing
     val typography = AppTheme.typography
     val colors = AppTheme.colors

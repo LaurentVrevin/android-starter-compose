@@ -31,13 +31,20 @@ Text(text = "Hello", style = AppTheme.typography.h1)
 Chaque composant atomique est découplé de son apparence visuelle.
 
 ### Fonctionnement
-Un composant comme `AppButton` demande son style au fournisseur local :
+Un composant comme `AppButton` demande son style au fournisseur via l'objet proxy `AppTheme` :
 ```kotlin
-val buttonStyle = style ?: LocalButtonStyles.current.primary(size)
+val buttonStyle = style ?: AppTheme.buttonStyles.primary(size)
 ```
 
 ### Personnalisation
 Pour changer l'apparence de TOUS les boutons de l'application, il suffit de modifier l'implémentation dans [`DefaultButtonStyles.kt`](../app/src/main/java/com/laurentvrevin/androidstarter/designsystem/styles/ButtonStyles.kt).
+
+### Styles Providers disponibles via `AppTheme`
+- `AppTheme.buttonStyles`
+- `AppTheme.cardStyles`
+- `AppTheme.chipStyles`
+- `AppTheme.inputStyles`
+- `AppTheme.topBarStyles`
 
 ---
 

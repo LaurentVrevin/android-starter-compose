@@ -8,7 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.laurentvrevin.androidstarter.designsystem.styles.*
 import com.laurentvrevin.androidstarter.designsystem.theme.AppTheme
 
@@ -19,7 +18,7 @@ fun AppCard(
     style: Style? = null,
     content: @Composable () -> Unit
 ) {
-    val cardStyle = style ?: LocalCardStyles.current.default()
+    val cardStyle = style ?: AppTheme.cardStyles.default()
     
     Column(
         modifier = modifier.styleable(style = cardStyle)
@@ -33,19 +32,18 @@ fun AppCard(
 private fun AppCardPreview() {
     AppTheme {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier.padding(AppTheme.spacing.standard),
+            verticalArrangement = Arrangement.spacedBy(AppTheme.spacing.standard)
         ) {
             AppCard {
                 Text("Default Card Content")
             }
-            AppCard(style = LocalCardStyles.current.elevated()) {
+            AppCard(style = AppTheme.cardStyles.elevated()) {
                 Text("Elevated Card Content")
             }
-            AppCard(style = LocalCardStyles.current.outlined()) {
+            AppCard(style = AppTheme.cardStyles.outlined()) {
                 Text("Outlined Card Content")
             }
         }
     }
 }
-

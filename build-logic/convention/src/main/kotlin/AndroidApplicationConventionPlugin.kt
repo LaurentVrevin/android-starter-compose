@@ -17,6 +17,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 defaultConfig {
                     targetSdk = 36
                     minSdk = 26
+                    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                 }
                 compileOptions {
                     sourceCompatibility = org.gradle.api.JavaVersion.VERSION_11

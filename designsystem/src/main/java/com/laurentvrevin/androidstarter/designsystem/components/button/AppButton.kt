@@ -11,7 +11,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.laurentvrevin.androidstarter.designsystem.foundation.AppSize
 import com.laurentvrevin.androidstarter.designsystem.styles.*
 import com.laurentvrevin.androidstarter.designsystem.theme.AppTheme
@@ -31,7 +30,7 @@ fun AppButton(
     trailingIcon: (@Composable () -> Unit)? = null,
     interactionSource: MutableInteractionSource? = null
 ) {
-    val buttonStyle = style ?: LocalButtonStyles.current.primary(AppSize.Medium)
+    val buttonStyle = style ?: AppTheme.buttonStyles.primary(AppSize.Medium)
     val spacing = AppTheme.spacing
     val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
     val styleState = rememberUpdatedStyleState(interactionSource) {
@@ -82,7 +81,7 @@ fun AppPrimaryButton(
     onClick = onClick,
     modifier = modifier,
     enabled = enabled,
-    style = LocalButtonStyles.current.primary(size),
+    style = AppTheme.buttonStyles.primary(size),
     leadingIcon = leadingIcon,
     trailingIcon = trailingIcon
 )
@@ -99,7 +98,7 @@ fun AppSecondaryButton(
     onClick = onClick,
     modifier = modifier,
     enabled = enabled,
-    style = LocalButtonStyles.current.secondary(size)
+    style = AppTheme.buttonStyles.secondary(size)
 )
 
 @Composable
@@ -114,7 +113,7 @@ fun AppOutlinedButton(
     onClick = onClick,
     modifier = modifier,
     enabled = enabled,
-    style = LocalButtonStyles.current.outlined(size)
+    style = AppTheme.buttonStyles.outlined(size)
 )
 
 @Composable
@@ -129,7 +128,7 @@ fun AppGhostButton(
     onClick = onClick,
     modifier = modifier,
     enabled = enabled,
-    style = LocalButtonStyles.current.ghost(size)
+    style = AppTheme.buttonStyles.ghost(size)
 )
 
 @Composable
@@ -144,7 +143,7 @@ fun AppDangerButton(
     onClick = onClick,
     modifier = modifier,
     enabled = enabled,
-    style = LocalButtonStyles.current.danger(size)
+    style = AppTheme.buttonStyles.danger(size)
 )
 
 @Preview(showBackground = true)

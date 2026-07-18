@@ -16,7 +16,7 @@ fun AppTopBar(
     modifier: Modifier = Modifier,
     style: Style? = null
 ) {
-    val topBarStyle = style ?: LocalTopBarStyles.current.default()
+    val topBarStyle = style ?: AppTheme.topBarStyles.default()
     val typography = AppTheme.typography
 
     Row(

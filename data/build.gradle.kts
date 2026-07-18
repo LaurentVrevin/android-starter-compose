@@ -23,4 +23,10 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     
     implementation(libs.koin.android)
+
+    // Testing
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.espresso.core)
+    androidTestImplementation(libs.androidx.room.testing)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
 }

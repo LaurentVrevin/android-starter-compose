@@ -26,8 +26,6 @@ import com.laurentvrevin.androidstarter.designsystem.components.input.AppInput
 import com.laurentvrevin.androidstarter.designsystem.components.topbar.AppTopBar
 import com.laurentvrevin.androidstarter.designsystem.foundation.AppSize
 import com.laurentvrevin.androidstarter.designsystem.patterns.SectionBlock
-import com.laurentvrevin.androidstarter.designsystem.styles.LocalButtonStyles
-import com.laurentvrevin.androidstarter.designsystem.styles.LocalCardStyles
 import com.laurentvrevin.androidstarter.designsystem.theme.AppTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -178,13 +176,13 @@ fun ShowcaseScreen(
                 }
                 AppCard(
                     modifier = Modifier.fillMaxWidth(),
-                    style = LocalCardStyles.current.elevated()
+                    style = AppTheme.cardStyles.elevated()
                 ) {
                     Text("Elevated Card with Shadow Level 2", style = typography.bodyLarge)
                 }
                 AppCard(
                     modifier = Modifier.fillMaxWidth(),
-                    style = LocalCardStyles.current.outlined()
+                    style = AppTheme.cardStyles.outlined()
                 ) {
                     Text("Outlined Card", style = typography.bodyLarge)
                 }

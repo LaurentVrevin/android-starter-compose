@@ -8,7 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.laurentvrevin.androidstarter.designsystem.foundation.AppSize
 import com.laurentvrevin.androidstarter.designsystem.styles.*
 import com.laurentvrevin.androidstarter.designsystem.theme.AppTheme
@@ -22,7 +21,7 @@ fun AppChip(
     size: AppSize = AppSize.Small,
     style: Style? = null
 ) {
-    val chipStyle = style ?: LocalChipStyles.current.default(size)
+    val chipStyle = style ?: AppTheme.chipStyles.default(size)
     val styleState = rememberUpdatedStyleState(null) {
         it.isSelected = selected
     }

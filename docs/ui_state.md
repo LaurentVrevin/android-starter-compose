@@ -1,12 +1,12 @@
 # UI State & Feedback Management
 
-Cette section explique comment gérer les états de vos écrans et les interactions avec l'utilisateur de manière réactive et centralisée.
+Cette section explique comment gérer les états de vos écrans et les feedbacks utilisateur.
 
 ---
 
 ## 1. Gestion des États (`UiState`)
 
-Chaque écran doit être piloté par une [`UiState`](../app/src/main/java/com/laurentvrevin/androidstarter/core/ui/UiState.kt).
+Chaque écran doit être piloté par une [`UiState`](../core/src/main/java/com/laurentvrevin/androidstarter/core/ui/UiState.kt).
 
 ```kotlin
 sealed interface UiState<out T> {
@@ -17,50 +17,31 @@ sealed interface UiState<out T> {
 }
 ```
 
-### Dans le ViewModel
-```kotlin
-private val _state = MutableStateFlow<UiState<User>>(UiState.Idle)
-val state = _state.asStateFlow()
-
-fun loadUser() {
-    _state.value = UiState.Loading
-    // ... appel repository ...
-    _state.value = UiState.Success(user)
-}
-```
+### Pattern recommandé
+Dans le ViewModel, utilisez un `StateFlow` pour exposer l'état.
 
 ---
 
 ## 2. Événements "One-shot" (`UiEvent`)
 
-Pour les actions qui ne sont pas des états (ex: afficher une Snackbar, naviguer), on utilise [`UiEvent`](../app/src/main/java/com/laurentvrevin/androidstarter/core/ui/UiEvent.kt).
-
-Ces événements sont diffusés via le **`FeedbackManager`**.
+Pour les actions éphémères (Snackbar, Navigation), on utilise [`UiEvent`](../core/src/main/java/com/laurentvrevin/androidstarter/core/ui/UiEvent.kt) diffusés via le **`FeedbackManager`**.
 
 ### Envoyer un événement
 ```kotlin
 feedbackManager.showSnackbar("Enregistré avec succès !", SnackbarType.Success)
 ```
 
-### Observer les événements (Root de l'app)
-Le `FeedbackManager` expose un `SharedFlow` que vous devez collecter dans votre activité principale ou votre composant de navigation racine pour afficher les Snackbars.
-
 ---
 
-## 3. Composants visuels
+## 3. Composants visuels de Feedback
 
-### `LoadingOverlay`
-À utiliser pour bloquer l'interaction pendant un chargement critique.
-```kotlin
-if (state is UiState.Loading) {
-    LoadingOverlay()
-}
-```
+Tous ces composants sont dans le module `:designsystem`.
 
-### `AppSnackbar`
-Composant stylisé selon le Design System, à injecter dans votre `Scaffold`.
+- **`LoadingOverlay`** : Overlay plein écran bloquant les interactions.
+- **`AppSnackbar`** : Snackbar personnalisée supportant les types `Success`, `Error`, `Warning`.
+- **`EmptyState`** : Composant de remplacement quand une liste est vide.
 
 ---
 
 > [!TIP]
-> Pour une expérience utilisateur optimale, privilégiez les "shimmer" ou loaders locaux au sein des composants plutôt que le `LoadingOverlay` plein écran quand c'est possible.
+> Consultez l'écran de Showcase pour voir ces composants en action et comprendre comment les déclencher.

@@ -4,49 +4,38 @@ Le projet **AndroidStarter** suit les principes de la **Clean Architecture** ada
 
 ---
 
-## 1. Structure des Packages
+## 1. Structure Multi-Modules
 
-Le projet est organisé par couches sémantiques :
+Le projet est éclaté en modules Gradle isolés pour favoriser la compilation incrémentale et l'isolation des couches :
 
-### `core/` (Infrastructure)
-Contient tout ce qui est transversal à l'application et indépendant des données concrètes.
-- `base/` : Classes de base (ex: `BaseRepository`).
-- `network/` : Types de retour réseau (`NetworkResult`, `NetworkError`).
-- `ui/` : Abstractions pour l'interface utilisateur (`UiState`, `UiEvent`, `FeedbackManager`).
-- `util/` : Utilitaires génériques (ex: `Mapper`).
+### `:core` (Infrastructure)
+Module pur Kotlin/Compose sans logique métier.
+- **`base/`** : Classes de base (ex: `BaseRepository`).
+- **`network/`** : Types de retour réseau (`NetworkResult`, `NetworkError`).
+- **`ui/`** : Abstractions pour l'interface utilisateur (`UiState`, `UiEvent`, `FeedbackManager`).
+- **`util/`** : Utilitaires génériques (ex: `Mapper`).
+- **`di/`** : Module Koin `:core` ([**`UiModule.kt`**](../core/src/main/java/com/laurentvrevin/androidstarter/core/di/UiModule.kt)).
 
-### `data/` (Implémentation des Données)
-Contient la logique concrète de récupération et de stockage des données.
-- `local/` : Persistance (Room Database, DataStore, Entities, DAOs).
-- `remote/` : Réseau (Ktor Client, API Services, DTOs).
-- `repository/` : Implémentations des Repositories orchestrant le local et le remote.
+### `:data` (Persistance & Réseau)
+Implémentation concrète de l'accès aux données.
+- **`local/`** : Room Database, DataStore, Entities, DAOs.
+- **`remote/`** : Configuration Ktor ([**`KtorClientFactory.kt`**](../data/src/main/java/com/laurentvrevin/androidstarter/data/remote/KtorClientFactory.kt)), API Services.
+- **`di/`** : Modules Koin `:data` ([**`DataModule.kt`**](../data/src/main/java/com/laurentvrevin/androidstarter/data/di/DataModule.kt), [**`NetworkModule.kt`**](../data/src/main/java/com/laurentvrevin/androidstarter/data/di/NetworkModule.kt)).
 
-### `designsystem/` (Framework UI)
-Contient le framework visuel complet et les composants atomiques.
-- `foundation/` : Jetons de design (Spacing, Shapes, Dimensions).
-- `components/` : Composants réutilisables (Buttons, Cards, Feedback).
-- `styles/` : Logique de style et providers.
-- `theme/` : Point d'accès unique (`AppTheme`).
+### `:designsystem` (Framework UI)
+Le cerveau visuel de l'application.
+- **`foundation/`** : Jetons de design (Spacing, Shapes, Dimensions).
+- **`components/`** : Composants atomiques réutilisables.
+- **`styles/`** : Logique de style et providers.
+- **`theme/`** : Point d'accès unique ([**`AppTheme`**](../designsystem/src/main/java/com/laurentvrevin/androidstarter/designsystem/theme/AppDesignSystem.kt)).
 
-### `di/` (Injection de Dépendances)
-Centralise la configuration de **Koin**. Les modules sont scindés par domaine (`NetworkModule`, `DataModule`, `UiModule`).
-
----
-
-## 2. Injection de Dépendances (Koin)
-
-Le projet utilise **Koin** pour sa légèreté et son excellente intégration avec Jetpack Compose.
-- **Initialisation** : Se fait dans la classe [`App.kt`](../app/src/main/java/com/laurentvrevin/androidstarter/App.kt).
-- **Modules** : Chaque couche définit ses propres dépendances via des `module { ... }`.
-
-**Exemple d'injection dans Compose :**
-```kotlin
-val feedbackManager: FeedbackManager = koinInject()
-```
+### `:app` (Orchestration)
+Le point d'entrée Android.
+- Contient la `MainActivity` et la classe [`App.kt`](../app/src/main/java/com/laurentvrevin/androidstarter/App.kt) qui assemble tous les modules Koin.
 
 ---
 
-## 3. Clean Architecture "Offline-First"
+## 2. Clean Architecture "Offline-First"
 
 Nous imposons un flux de données strict pour garantir une expérience utilisateur fluide :
 
@@ -56,8 +45,3 @@ Nous imposons un flux de données strict pour garantir une expérience utilisate
 
 > [!TIP]
 > Toujours utiliser le pattern **Single Source of Truth (SSOT)** : L'UI n'observe JAMAIS directement le réseau, seulement la base de données locale.
-
----
-
-## 4. Modularisation détaillée
-Pour plus d'informations sur la structure multi-modules et les Convention Plugins, consultez le [**Guide de Modularisation**](modularization.md).

@@ -6,7 +6,7 @@ Le Design System d'AndroidStarter est basé sur une architecture de **Tokens** e
 
 ## 1. Accès aux Tokens
 
-L'objet [**`AppTheme`**](../app/src/main/java/com/laurentvrevin/androidstarter/designsystem/theme/AppDesignSystem.kt) est le point d'entrée unique. Toutes les valeurs sont injectées dynamiquement.
+L'objet [**`AppTheme`**](../designsystem/src/main/java/com/laurentvrevin/androidstarter/designsystem/theme/AppDesignSystem.kt) est le point d'entrée unique. Toutes les valeurs sont injectées dynamiquement.
 
 ```kotlin
 // Spacing
@@ -37,7 +37,7 @@ val buttonStyle = style ?: AppTheme.buttonStyles.primary(size)
 ```
 
 ### Personnalisation
-Pour changer l'apparence de TOUS les boutons de l'application, il suffit de modifier l'implémentation dans [`DefaultButtonStyles.kt`](../app/src/main/java/com/laurentvrevin/androidstarter/designsystem/styles/ButtonStyles.kt).
+Pour changer l'apparence de TOUS les boutons de l'application, il suffit de modifier l'implémentation dans les Style Providers du module `:designsystem`.
 
 ### Styles Providers disponibles via `AppTheme`
 - `AppTheme.buttonStyles`
@@ -55,7 +55,7 @@ Gérées via le `FeedbackManager`. Supporte :
 - `Default`, `Success`, `Error`, `Warning`.
 
 ### Loading Overlay (`LoadingOverlay`)
-Bloque l'interface pendant un chargement.
+Bloque l'interface pendant un chargement critique.
 ```kotlin
 LoadingOverlay(isLoading = state.isLoading)
 ```
@@ -67,10 +67,11 @@ Affiche un message et une action optionnelle quand une liste est vide.
 
 ## 4. Visualisation (Showcase)
 
-L'écran [`ShowcaseScreen.kt`](../app/src/main/java/com/laurentvrevin/androidstarter/designsystem/ShowcaseScreen.kt) permet de tester interactivement :
+L'écran [`ShowcaseScreen.kt`](../designsystem/src/main/java/com/laurentvrevin/androidstarter/designsystem/ShowcaseScreen.kt) permet de tester interactivement :
 - Le switch **Dark/Light Mode**.
 - Toutes les variantes de boutons et tailles.
 - Les échelles visuelles de spacing et shapes.
+- La simulation de synchronisation de données.
 
 > [!IMPORTANT]
 > Avant d'utiliser un nouveau composant, vérifiez son rendu dans le Showcase en activant le mode sombre pour valider les contrastes.

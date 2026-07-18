@@ -44,6 +44,7 @@ Pour bien prendre en main le starter pack, consultez les guides détaillés par 
 3.  🌐 [**Réseau (Ktor)**](docs/network.md) : Pattern Result, gestion d'erreurs et mocking.
 4.  💾 [**Données (Room & DataStore)**](docs/data.md) : Persistance, SSOT et mappers.
 5.  🚦 [**UI State & Feedback**](docs/ui_state.md) : Gestion des états et événements éphémères.
+6.  🧪 [**Stratégie de Test**](docs/testing.md) : Tests unitaires Network et instrumentation Database.
 
 ---
 
@@ -51,7 +52,7 @@ Pour bien prendre en main le starter pack, consultez les guides détaillés par 
 
 1.  **Renommer le Package** : Remplacez `com.laurentvrevin.androidstarter` par votre identifiant unique.
 2.  **Showcase** : L'application se lance sur l'écran `ShowcaseScreen` pour vous permettre de visualiser tous les composants disponibles.
-3.  **Vérification** : Lancez `./gradlew test` pour valider l'infrastructure technique.
+3.  **Vérification** : Lancez `./gradlew test` et `./gradlew connectedAndroidTest` pour valider l'infrastructure technique.
 
 ---
 

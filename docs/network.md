@@ -6,7 +6,7 @@ L'infrastructure réseau repose sur **Ktor Client**, configuré pour la résilie
 
 ## 1. Configuration du Client
 
-Le `HttpClient` est créé via la [**`KtorClientFactory`**](../app/src/main/java/com/laurentvrevin/androidstarter/data/remote/KtorClientFactory.kt) :
+Le `HttpClient` est créé via la [**`KtorClientFactory`**](../data/src/main/java/com/laurentvrevin/androidstarter/data/remote/KtorClientFactory.kt) dans le module `:data` :
 - **Engine** : OkHttp.
 - **Serialization** : JSON (Kotlinx Serialization).
 - **Logging** : Logs complets en debug.
@@ -16,7 +16,7 @@ Le `HttpClient` est créé via la [**`KtorClientFactory`**](../app/src/main/java
 
 ## 2. Pattern de Résilience : `NetworkResult`
 
-Tous les appels API doivent retourner un [`NetworkResult<T>`](../app/src/main/java/com/laurentvrevin/androidstarter/core/network/NetworkResult.kt).
+Tous les appels API doivent retourner un [`NetworkResult<T>`](../core/src/main/java/com/laurentvrevin/androidstarter/core/network/NetworkResult.kt).
 
 ```kotlin
 sealed interface NetworkResult<out T> {
@@ -26,11 +26,7 @@ sealed interface NetworkResult<out T> {
 ```
 
 ### Types d'erreurs gérés
-Le système traduit automatiquement les codes HTTP en [`NetworkError`](../app/src/main/java/com/laurentvrevin/androidstarter/core/network/NetworkError.kt) :
-- `UNAUTHORIZED` (401)
-- `NOT_FOUND` (404)
-- `SERVER_ERROR` (5xx)
-- `NO_INTERNET` (IOException)
+Le système traduit automatiquement les codes HTTP en [`NetworkError`](../core/src/main/java/com/laurentvrevin/androidstarter/core/network/NetworkError.kt) via le `BaseRepository`.
 
 ---
 
@@ -49,19 +45,10 @@ class ProductRepository(private val client: HttpClient) : BaseRepository() {
 
 ---
 
-## 4. Tests Unitaires (Mocking)
+## 4. Fiabilité & Debug
 
-Pour tester vos appels réseau sans serveur, utilisez le `MockEngine` de Ktor. Un exemple complet est disponible dans [**`NetworkTest.kt`**](../app/src/test/java/com/laurentvrevin/androidstarter/core/network/NetworkTest.kt).
-
-```kotlin
-val client = HttpClient(MockEngine) {
-    engine {
-        addHandler { request ->
-            respond(jsonString, HttpStatusCode.OK)
-        }
-    }
-}
-```
+- **Logs** : En mode debug, toutes les requêtes/réponses sont affichées dans Logcat sous le tag `HttpClient`.
+- **Tests** : Utilisez le `MockEngine` pour simuler des réponses API. Voir [**`NetworkTest.kt`**](../core/src/test/java/com/laurentvrevin/androidstarter/core/network/NetworkTest.kt).
 
 > [!TIP]
 > Utilisez toujours `safeCall` pour envelopper vos appels Ktor afin de garantir qu'aucune exception technique ne remonte jusqu'à l'UI.

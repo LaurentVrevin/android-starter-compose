@@ -20,6 +20,21 @@ Le projet utilise les standards les plus récents du développement Android :
 
 ---
 
+## 🏗 Architecture du Projet
+
+Le projet suit une architecture **multi-modules** pour favoriser la scalabilité et l'isolation des responsabilités :
+
+```text
+AndroidStarter/
+├── :app                # Application Android (MainActivity, DI global)
+├── :core               # Infrastructure transversale (Network types, UiState, Utils)
+├── :data               # Implémentation des données (Room, DataStore, Ktor, Repositories)
+├── :designsystem       # Framework UI complet (Tokens, Styles, Composants)
+└── build-logic/        # Convention Plugins pour la configuration Gradle unifiée
+```
+
+---
+
 ## 📚 Documentation Technique
 
 Pour bien prendre en main le starter pack, consultez les guides détaillés par thématique :

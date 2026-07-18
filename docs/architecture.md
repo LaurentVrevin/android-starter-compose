@@ -56,3 +56,8 @@ Nous imposons un flux de données strict pour garantir une expérience utilisate
 
 > [!TIP]
 > Toujours utiliser le pattern **Single Source of Truth (SSOT)** : L'UI n'observe JAMAIS directement le réseau, seulement la base de données locale.
+
+---
+
+## 4. Modularisation détaillée
+Pour plus d'informations sur la structure multi-modules et les Convention Plugins, consultez le [**Guide de Modularisation**](modularization.md).

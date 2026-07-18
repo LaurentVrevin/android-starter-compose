@@ -1,9 +1,9 @@
 package com.laurentvrevin.androidstarter
 
 import android.app.Application
-import com.laurentvrevin.androidstarter.di.dataModule
-import com.laurentvrevin.androidstarter.di.networkModule
-import com.laurentvrevin.androidstarter.di.uiModule
+import com.laurentvrevin.androidstarter.core.di.uiModule
+import com.laurentvrevin.androidstarter.data.di.dataModule
+import com.laurentvrevin.androidstarter.data.di.networkModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin

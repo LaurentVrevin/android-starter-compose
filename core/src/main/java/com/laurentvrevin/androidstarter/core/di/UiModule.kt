@@ -1,4 +1,4 @@
-package com.laurentvrevin.androidstarter.di
+package com.laurentvrevin.androidstarter.core.di
 
 import com.laurentvrevin.androidstarter.core.ui.FeedbackManager
 import org.koin.dsl.module

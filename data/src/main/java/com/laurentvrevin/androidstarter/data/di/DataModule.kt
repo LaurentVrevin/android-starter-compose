@@ -1,4 +1,4 @@
-package com.laurentvrevin.androidstarter.di
+package com.laurentvrevin.androidstarter.data.di
 
 import androidx.room.Room
 import com.laurentvrevin.androidstarter.data.local.AppDatabase

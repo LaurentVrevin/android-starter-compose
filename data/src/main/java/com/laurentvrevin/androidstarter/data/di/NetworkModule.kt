@@ -1,4 +1,4 @@
-package com.laurentvrevin.androidstarter.di
+package com.laurentvrevin.androidstarter.data.di
 
 import com.laurentvrevin.androidstarter.data.remote.KtorClientFactory
 import org.koin.dsl.module

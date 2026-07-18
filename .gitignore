@@ -37,5 +37,5 @@ app/build/
 # Sensitive info
 local.properties
 
-# Android Starter Artifacts (Optional: keep them if you want the docs on Git)
-#!.artifacts/
+# Android Starter Artifacts
+.artifacts/

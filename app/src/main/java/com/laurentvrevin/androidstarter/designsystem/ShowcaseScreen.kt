@@ -15,13 +15,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.laurentvrevin.androidstarter.core.ui.SnackbarType
 import com.laurentvrevin.androidstarter.designsystem.components.button.*
 import com.laurentvrevin.androidstarter.designsystem.components.card.AppCard
 import com.laurentvrevin.androidstarter.designsystem.components.chip.AppChip
+import com.laurentvrevin.androidstarter.designsystem.components.feedback.AppSnackbar
+import com.laurentvrevin.androidstarter.designsystem.components.feedback.EmptyState
+import com.laurentvrevin.androidstarter.designsystem.components.feedback.LoadingOverlay
 import com.laurentvrevin.androidstarter.designsystem.components.input.AppInput
 import com.laurentvrevin.androidstarter.designsystem.components.topbar.AppTopBar
 import com.laurentvrevin.androidstarter.designsystem.foundation.AppSize
 import com.laurentvrevin.androidstarter.designsystem.patterns.SectionBlock
+import com.laurentvrevin.androidstarter.designsystem.styles.LocalButtonStyles
 import com.laurentvrevin.androidstarter.designsystem.styles.LocalCardStyles
 import com.laurentvrevin.androidstarter.designsystem.theme.AppTheme
 import kotlinx.coroutines.delay
@@ -38,10 +43,17 @@ fun ShowcaseScreen(
     val typography = AppTheme.typography
     val shapes = AppTheme.shapes
     val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    var currentSnackbarType by remember { mutableStateOf(SnackbarType.Default) }
 
     Scaffold(
         topBar = {
             AppTopBar(title = "Design System Showcase")
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) { data ->
+                AppSnackbar(snackbarData = data, type = currentSnackbarType)
+            }
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onThemeToggle) {
@@ -178,31 +190,56 @@ fun ShowcaseScreen(
                 }
             }
 
-            // SECTION: INTEGRATION TEST (MOCK SYNC)
-            SectionBlock(title = "Data Sync Simulation") {
-                var syncStatus by remember { mutableStateOf("Ready to sync") }
-                var isLoading by remember { mutableStateOf(false) }
+            // SECTION: UI STATE & FEEDBACK
+            SectionBlock(title = "UI State & Feedback") {
+                var showGlobalLoader by remember { mutableStateOf(false) }
 
-                AppCard(modifier = Modifier.fillMaxWidth()) {
-                    Column(verticalArrangement = Arrangement.spacedBy(spacing.small)) {
-                        Text("Status: $syncStatus", style = typography.bodyLarge)
-                        AppPrimaryButton(
-                            text = if (isLoading) "Syncing..." else "Start Sync Simulation",
-                            enabled = !isLoading,
-                            onClick = {
-                                scope.launch {
-                                    isLoading = true
-                                    syncStatus = "Fetching from Network (Mock)..."
-                                    delay(1000)
-                                    syncStatus = "Mapping & Saving to Room (Mock)..."
-                                    delay(800)
-                                    syncStatus = "Success! Data persistent in SSOT."
-                                    isLoading = false
-                                }
-                            }
-                        )
-                    }
+                Text("Snackbars", style = typography.titleLarge)
+                Row(horizontalArrangement = Arrangement.spacedBy(spacing.small)) {
+                    AppPrimaryButton("Default", onClick = {
+                        scope.launch {
+                            currentSnackbarType = SnackbarType.Default
+                            snackbarHostState.showSnackbar("This is a default message")
+                        }
+                    }, size = AppSize.Small)
+                    
+                    AppPrimaryButton("Success", onClick = {
+                        scope.launch {
+                            currentSnackbarType = SnackbarType.Success
+                            snackbarHostState.showSnackbar("Operation successful!")
+                        }
+                    }, size = AppSize.Small)
+
+                    AppDangerButton("Error", onClick = {
+                        scope.launch {
+                            currentSnackbarType = SnackbarType.Error
+                            snackbarHostState.showSnackbar("An error occurred")
+                        }
+                    }, size = AppSize.Small)
                 }
+
+                Spacer(Modifier.height(spacing.small))
+                Text("Loading States", style = typography.titleLarge)
+                AppSecondaryButton("Trigger Fullscreen Loader (2s)", onClick = {
+                    scope.launch {
+                        showGlobalLoader = true
+                        delay(2000)
+                        showGlobalLoader = false
+                    }
+                })
+
+                Spacer(Modifier.height(spacing.small))
+                Text("Empty States", style = typography.titleLarge)
+                AppCard(modifier = Modifier.fillMaxWidth()) {
+                    EmptyState(
+                        message = "No items found. Try searching for something else.",
+                        action = {
+                            AppOutlinedButton("Retry", onClick = {}, size = AppSize.Small)
+                        }
+                    )
+                }
+                
+                LoadingOverlay(isLoading = showGlobalLoader)
             }
 
             Spacer(Modifier.height(spacing.tripleLarge))

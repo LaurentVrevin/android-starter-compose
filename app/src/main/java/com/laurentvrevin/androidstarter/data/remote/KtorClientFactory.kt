@@ -10,6 +10,14 @@ import kotlinx.serialization.json.Json
 
 object KtorClientFactory {
 
+    /**
+     * Configure le client HTTP Ktor avec les meilleurs paramètres de production.
+     * 
+     * - Engine: OkHttp (standard Android)
+     * - ContentNegotiation: JSON via Kotlinx Serialization
+     * - Logging: Logs complets pour le debug
+     * - Timeouts: Sécurité contre les appels bloqués
+     */
     fun create(): HttpClient {
         return HttpClient(OkHttp) {
             expectSuccess = true

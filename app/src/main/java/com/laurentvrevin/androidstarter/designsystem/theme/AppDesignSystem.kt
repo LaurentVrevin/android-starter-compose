@@ -7,7 +7,11 @@ import androidx.compose.runtime.ReadOnlyComposable
 import com.laurentvrevin.androidstarter.designsystem.foundation.*
 
 /**
- * Point d'accès unique pour les tokens du Design System.
+ * Objet d'accès centralisé aux jetons (tokens) du Design System.
+ * 
+ * Il agit comme un proxy vers les [CompositionLocal] injectés par [AppTheme].
+ * Cette approche permet une syntaxe concise : `AppTheme.spacing.medium`
+ * au lieu de `LocalAppSpacing.current.medium`.
  */
 object AppTheme {
 

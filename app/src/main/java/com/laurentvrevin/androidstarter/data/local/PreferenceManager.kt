@@ -11,6 +11,12 @@ import java.io.IOException
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
+/**
+ * Gestionnaire réactif des préférences utilisateur utilisant DataStore.
+ * 
+ * Contrairement à SharedPreferences, DataStore offre une API asynchrone 
+ * basée sur les [Flow], évitant ainsi de bloquer le thread principal.
+ */
 class PreferenceManager(private val context: Context) {
 
     suspend fun saveString(key: String, value: String) {

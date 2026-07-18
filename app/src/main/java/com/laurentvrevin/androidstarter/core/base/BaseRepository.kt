@@ -8,6 +8,12 @@ import kotlinx.serialization.SerializationException
 
 abstract class BaseRepository {
 
+    /**
+     * Exécute un appel réseau de manière sécurisée en interceptant les exceptions Ktor.
+     * 
+     * Cette méthode transforme les erreurs techniques (401, 404, 500, Timeout, etc.)
+     * en une [NetworkError] métier simplifiée et facile à traiter par l'UI.
+     */
     suspend fun <T> safeCall(call: suspend () -> T): NetworkResult<T> {
         return try {
             NetworkResult.Success(call())

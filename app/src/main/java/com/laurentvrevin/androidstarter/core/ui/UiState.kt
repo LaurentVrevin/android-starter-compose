@@ -3,7 +3,10 @@ package com.laurentvrevin.androidstarter.core.ui
 import androidx.compose.runtime.Immutable
 
 /**
- * Interface scellée représentant les différents états possibles d'un écran ou d'un composant.
+ * Représente l'état complet d'un écran ou d'une vue.
+ * 
+ * Suit le principe du pattern MVI (Model-View-Intent) pour garantir 
+ * une UI prévisible et sans effets de bord.
  */
 @Immutable
 sealed interface UiState<out T> {

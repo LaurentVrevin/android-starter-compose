@@ -17,16 +17,17 @@ import com.laurentvrevin.androidstarter.designsystem.theme.AppTheme
 @Composable
 fun ScreenContainer(
     modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     val spacing = AppTheme.spacing
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(horizontal = spacing.standard, vertical = spacing.medium),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(horizontal = spacing.standard, vertical = spacing.medium),
         verticalArrangement = Arrangement.spacedBy(spacing.large),
-        content = content
+        content = content,
     )
 }

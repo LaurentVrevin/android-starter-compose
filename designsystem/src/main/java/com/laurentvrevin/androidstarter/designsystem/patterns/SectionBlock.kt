@@ -14,7 +14,7 @@ import com.laurentvrevin.androidstarter.designsystem.theme.AppTheme
 fun SectionBlock(
     modifier: Modifier = Modifier,
     title: String? = null,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     val spacing = AppTheme.spacing
     val typography = AppTheme.typography
@@ -23,14 +23,14 @@ fun SectionBlock(
         if (title != null) {
             Text(
                 text = title,
-                style = typography.titleLarge
+                style = typography.titleLarge,
             )
             Spacer(Modifier.height(spacing.medium))
         }
 
         Column(
             verticalArrangement = Arrangement.spacedBy(spacing.small),
-            content = content
+            content = content,
         )
     }
 }

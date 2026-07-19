@@ -17,18 +17,18 @@ interface ChipStyles {
  * Implémentation par défaut des styles de chips.
  */
 class DefaultChipStyles : ChipStyles {
-
     @Composable
     override fun default(size: AppSize): Style {
         val colors = AppTheme.colors
         val spacing = AppTheme.spacing
         val dimensions = AppTheme.dimensions
         val typography = AppTheme.typography
-        
-        val height = when (size) {
-            AppSize.Small -> dimensions.chip.heightSmall
-            AppSize.Medium, AppSize.Large -> dimensions.chip.heightMedium
-        }
+
+        val height =
+            when (size) {
+                AppSize.Small -> dimensions.chip.heightSmall
+                AppSize.Medium, AppSize.Large -> dimensions.chip.heightMedium
+            }
 
         return Style {
             shape(CircleShape)

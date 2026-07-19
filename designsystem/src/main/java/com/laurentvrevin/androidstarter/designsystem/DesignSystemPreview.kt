@@ -26,10 +26,11 @@ fun DesignSystemStylesPreview() {
         val spacing = AppTheme.spacing
 
         Column(
-            modifier = Modifier
-                .padding(spacing.standard)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(spacing.standard)
+            modifier =
+                Modifier
+                    .padding(spacing.standard)
+                    .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(spacing.standard),
         ) {
             Row(horizontalArrangement = Arrangement.spacedBy(spacing.small)) {
                 AppPrimaryButton(text = "Primary", onClick = {})
@@ -50,7 +51,7 @@ fun DesignSystemStylesPreview() {
                 AppChip(
                     text = "Chip Interactive",
                     selected = chipSelected,
-                    modifier = Modifier.clickable { chipSelected = !chipSelected }
+                    modifier = Modifier.clickable { chipSelected = !chipSelected },
                 )
                 AppChip(text = "Chip Selected", selected = true)
                 AppChip(text = "Chip Normal", selected = false)

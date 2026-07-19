@@ -19,16 +19,17 @@ fun AppChip(
     modifier: Modifier = Modifier,
     selected: Boolean = false,
     size: AppSize = AppSize.Small,
-    style: Style? = null
+    style: Style? = null,
 ) {
     val chipStyle = style ?: AppTheme.chipStyles.default(size)
-    val styleState = rememberUpdatedStyleState(null) {
-        it.isSelected = selected
-    }
+    val styleState =
+        rememberUpdatedStyleState(null) {
+            it.isSelected = selected
+        }
 
     Text(
         text = text,
-        modifier = modifier.styleable(styleState, chipStyle)
+        modifier = modifier.styleable(styleState, chipStyle),
     )
 }
 
@@ -38,7 +39,7 @@ private fun AppChipPreview() {
     AppTheme {
         Row(
             modifier = Modifier.padding(AppTheme.spacing.standard),
-            horizontalArrangement = Arrangement.spacedBy(AppTheme.spacing.small)
+            horizontalArrangement = Arrangement.spacedBy(AppTheme.spacing.small),
         ) {
             AppChip(text = "Small Chip")
             AppChip(text = "Medium Chip", size = AppSize.Medium)

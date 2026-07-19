@@ -5,30 +5,32 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.laurentvrevin.androidstarter.designsystem.ui.SnackbarType
 import com.laurentvrevin.androidstarter.designsystem.theme.AppTheme
+import com.laurentvrevin.androidstarter.designsystem.ui.SnackbarType
 
 @Composable
 fun AppSnackbar(
     snackbarData: SnackbarData,
     type: SnackbarType = SnackbarType.Default,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val colors = AppTheme.colors
     val shapes = AppTheme.shapes
     val spacing = AppTheme.spacing
 
-    val backgroundColor = when (type) {
-        SnackbarType.Default -> colors.inverseSurface
-        SnackbarType.Success -> Color(0xFF4CAF50)
-        SnackbarType.Error -> colors.error
-        SnackbarType.Warning -> Color(0xFFFF9800)
-    }
+    val backgroundColor =
+        when (type) {
+            SnackbarType.Default -> colors.inverseSurface
+            SnackbarType.Success -> Color(0xFF4CAF50)
+            SnackbarType.Error -> colors.error
+            SnackbarType.Warning -> Color(0xFFFF9800)
+        }
 
-    val contentColor = when (type) {
-        SnackbarType.Default -> colors.inverseOnSurface
-        else -> Color.White
-    }
+    val contentColor =
+        when (type) {
+            SnackbarType.Default -> colors.inverseOnSurface
+            else -> Color.White
+        }
 
     Snackbar(
         modifier = modifier.padding(spacing.standard),
@@ -39,12 +41,12 @@ fun AppSnackbar(
             snackbarData.visuals.actionLabel?.let { actionLabel ->
                 TextButton(
                     onClick = { snackbarData.performAction() },
-                    colors = ButtonDefaults.textButtonColors(contentColor = contentColor)
+                    colors = ButtonDefaults.textButtonColors(contentColor = contentColor),
                 ) {
                     Text(actionLabel)
                 }
             }
-        }
+        },
     ) {
         Text(snackbarData.visuals.message)
     }

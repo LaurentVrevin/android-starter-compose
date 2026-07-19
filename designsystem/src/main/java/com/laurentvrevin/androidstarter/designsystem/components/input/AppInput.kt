@@ -18,7 +18,7 @@ fun AppInput(
     modifier: Modifier = Modifier,
     isError: Boolean = false,
     errorMessage: String? = null,
-    style: Style? = null
+    style: Style? = null,
 ) {
     val inputStyle = style ?: AppTheme.inputStyles.default()
     val spacing = AppTheme.spacing
@@ -26,10 +26,9 @@ fun AppInput(
     val colors = AppTheme.colors
 
     Column(modifier = modifier.styleable(style = inputStyle)) {
-
         Text(
             text = label,
-            style = typography.bodySmall
+            style = typography.bodySmall,
         )
 
         Spacer(Modifier.height(spacing.extraSmall))
@@ -38,7 +37,7 @@ fun AppInput(
             value = value,
             onValueChange = onValueChange,
             isError = isError,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         if (isError && errorMessage != null) {
@@ -46,7 +45,7 @@ fun AppInput(
             Text(
                 text = errorMessage,
                 style = typography.labelMedium,
-                color = colors.error
+                color = colors.error,
             )
         }
     }
@@ -58,19 +57,19 @@ private fun AppInputPreview() {
     AppTheme {
         Column(
             modifier = Modifier.padding(AppTheme.spacing.standard),
-            verticalArrangement = Arrangement.spacedBy(AppTheme.spacing.standard)
+            verticalArrangement = Arrangement.spacedBy(AppTheme.spacing.standard),
         ) {
             AppInput(
                 value = "",
                 onValueChange = {},
-                label = "Nom"
+                label = "Nom",
             )
             AppInput(
                 value = "Laurent",
                 onValueChange = {},
                 label = "Prénom",
                 isError = true,
-                errorMessage = "Erreur de saisie"
+                errorMessage = "Erreur de saisie",
             )
         }
     }

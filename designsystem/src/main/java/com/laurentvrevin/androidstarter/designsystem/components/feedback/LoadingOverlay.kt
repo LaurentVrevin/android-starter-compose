@@ -15,19 +15,20 @@ import com.laurentvrevin.androidstarter.designsystem.theme.AppTheme
 @Composable
 fun LoadingOverlay(
     modifier: Modifier = Modifier,
-    isLoading: Boolean = true
+    isLoading: Boolean = true,
 ) {
     if (isLoading) {
         Box(
-            modifier = modifier
-                .fillMaxSize()
-                .background(AppTheme.colors.scrim.copy(alpha = 0.3f))
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClick = {} // Bloquer les clics
-                ),
-            contentAlignment = Alignment.Center
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .background(AppTheme.colors.scrim.copy(alpha = 0.3f))
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = {}, // Bloquer les clics
+                    ),
+            contentAlignment = Alignment.Center,
         ) {
             CircularProgressIndicator(color = AppTheme.colors.primary)
         }

@@ -6,5 +6,5 @@ package com.laurentvrevin.androidstarter.designsystem.foundation
 enum class AppSize {
     Small,
     Medium,
-    Large
+    Large,
 }

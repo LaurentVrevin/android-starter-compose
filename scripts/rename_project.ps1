@@ -17,7 +17,7 @@ Get-ChildItem -Recurse -Exclude *.png,*.jpg,*.ico,*.jar,.git,build,.gradle | Whe
         Write-Host "Updating $($_.FullName)"
         $content = $content -replace $OldPackageName, $NewPackageName
         $content = $content -replace $OldAppName, $NewAppName
-        Set-Content $_.FullName $content
+        [System.IO.File]::WriteAllText($_.FullName, $content)
     }
 }
 

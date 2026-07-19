@@ -28,26 +28,28 @@ fun AppButton(
     style: Style? = null,
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
-    interactionSource: MutableInteractionSource? = null
+    interactionSource: MutableInteractionSource? = null,
 ) {
     val buttonStyle = style ?: AppTheme.buttonStyles.primary(AppSize.Medium)
     val spacing = AppTheme.spacing
     val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
-    val styleState = rememberUpdatedStyleState(interactionSource) {
-        it.isEnabled = enabled
-    }
+    val styleState =
+        rememberUpdatedStyleState(interactionSource) {
+            it.isEnabled = enabled
+        }
 
     Row(
-        modifier = modifier
-            .clickable(
-                onClick = onClick,
-                enabled = enabled,
-                interactionSource = interactionSource,
-                indication = LocalIndication.current
-            )
-            .styleable(styleState, buttonStyle),
+        modifier =
+            modifier
+                .clickable(
+                    onClick = onClick,
+                    enabled = enabled,
+                    interactionSource = interactionSource,
+                    indication = LocalIndication.current,
+                )
+                .styleable(styleState, buttonStyle),
         horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         if (leadingIcon != null) {
             leadingIcon()
@@ -75,7 +77,7 @@ fun AppPrimaryButton(
     enabled: Boolean = true,
     size: AppSize = AppSize.Medium,
     leadingIcon: (@Composable () -> Unit)? = null,
-    trailingIcon: (@Composable () -> Unit)? = null
+    trailingIcon: (@Composable () -> Unit)? = null,
 ) = AppButton(
     text = text,
     onClick = onClick,
@@ -83,7 +85,7 @@ fun AppPrimaryButton(
     enabled = enabled,
     style = AppTheme.buttonStyles.primary(size),
     leadingIcon = leadingIcon,
-    trailingIcon = trailingIcon
+    trailingIcon = trailingIcon,
 )
 
 @Composable
@@ -92,13 +94,13 @@ fun AppSecondaryButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    size: AppSize = AppSize.Medium
+    size: AppSize = AppSize.Medium,
 ) = AppButton(
     text = text,
     onClick = onClick,
     modifier = modifier,
     enabled = enabled,
-    style = AppTheme.buttonStyles.secondary(size)
+    style = AppTheme.buttonStyles.secondary(size),
 )
 
 @Composable
@@ -107,13 +109,13 @@ fun AppOutlinedButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    size: AppSize = AppSize.Medium
+    size: AppSize = AppSize.Medium,
 ) = AppButton(
     text = text,
     onClick = onClick,
     modifier = modifier,
     enabled = enabled,
-    style = AppTheme.buttonStyles.outlined(size)
+    style = AppTheme.buttonStyles.outlined(size),
 )
 
 @Composable
@@ -122,13 +124,13 @@ fun AppGhostButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    size: AppSize = AppSize.Medium
+    size: AppSize = AppSize.Medium,
 ) = AppButton(
     text = text,
     onClick = onClick,
     modifier = modifier,
     enabled = enabled,
-    style = AppTheme.buttonStyles.ghost(size)
+    style = AppTheme.buttonStyles.ghost(size),
 )
 
 @Composable
@@ -137,13 +139,13 @@ fun AppDangerButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    size: AppSize = AppSize.Medium
+    size: AppSize = AppSize.Medium,
 ) = AppButton(
     text = text,
     onClick = onClick,
     modifier = modifier,
     enabled = enabled,
-    style = AppTheme.buttonStyles.danger(size)
+    style = AppTheme.buttonStyles.danger(size),
 )
 
 @Preview(showBackground = true)
@@ -152,7 +154,7 @@ private fun AppButtonPreview() {
     AppTheme {
         Column(
             modifier = Modifier.padding(AppTheme.spacing.standard),
-            verticalArrangement = Arrangement.spacedBy(AppTheme.spacing.small)
+            verticalArrangement = Arrangement.spacedBy(AppTheme.spacing.small),
         ) {
             AppPrimaryButton(text = "Primary Medium", onClick = {})
             AppPrimaryButton(text = "Primary Small", size = AppSize.Small, onClick = {})

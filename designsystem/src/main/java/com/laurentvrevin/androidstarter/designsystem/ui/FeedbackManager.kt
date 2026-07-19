@@ -14,7 +14,10 @@ class FeedbackManager {
         _events.emit(event)
     }
 
-    suspend fun showSnackbar(message: String, type: SnackbarType = SnackbarType.Default) {
+    suspend fun showSnackbar(
+        message: String,
+        type: SnackbarType = SnackbarType.Default,
+    ) {
         _events.emit(UiEvent.ShowSnackbar(message, type))
     }
 }

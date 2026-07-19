@@ -1,0 +1,67 @@
+package com.laurentvrevin.androidstarter.feature.template
+
+import com.laurentvrevin.androidstarter.feature.template.domain.TemplateItem
+import com.laurentvrevin.androidstarter.feature.template.domain.TemplateRepository
+import com.laurentvrevin.androidstarter.feature.template.presentation.TemplateViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.*
+import org.junit.After
+import org.junit.Assert.assertEquals
+import org.junit.Before
+import org.junit.Test
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class TemplateViewModelTest {
+    private val testDispatcher = StandardTestDispatcher()
+    private lateinit var viewModel: TemplateViewModel
+    private lateinit var fakeRepository: FakeTemplateRepository
+
+    @Before
+    fun setup() {
+        Dispatchers.setMain(testDispatcher)
+        fakeRepository = FakeTemplateRepository()
+        viewModel = TemplateViewModel(fakeRepository)
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
+
+    @Test
+    fun `initial state has items from repository`() =
+        runTest {
+            val items = listOf(TemplateItem(1, "Title", "Desc"))
+            fakeRepository.emit(items)
+
+            advanceUntilIdle()
+
+            val state = viewModel.state.value
+            assertEquals(items, state.items)
+            assertEquals(false, state.isInitialLoading)
+        }
+}
+
+class FakeTemplateRepository : TemplateRepository {
+    private val _templates = MutableStateFlow<List<TemplateItem>>(emptyList())
+
+    override fun getTemplates(): Flow<List<TemplateItem>> = _templates
+
+    override suspend fun addTemplate(
+        title: String,
+        description: String,
+    ) {
+        // No-op for simple state test
+    }
+
+    override suspend fun deleteTemplate(id: Int) {
+        // No-op for simple state test
+    }
+
+    fun emit(items: List<TemplateItem>) {
+        _templates.value = items
+    }
+}

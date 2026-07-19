@@ -10,13 +10,13 @@ import androidx.compose.ui.unit.Dp
  * Regroupe les utilitaires et extensions pour l'API Styles.
  */
 object AppStyles {
-
     /**
      * Style de base partagé par plusieurs composants.
      */
-    val Base = Style {
-        // Propriétés communes si nécessaires
-    }
+    val Base =
+        Style {
+            // Propriétés communes si nécessaires
+        }
 }
 
 /**
@@ -24,7 +24,7 @@ object AppStyles {
  */
 fun StyleScope.AppPadding(
     spacing: AppSpacing,
-    all: Dp? = null
+    all: Dp? = null,
 ) {
     contentPadding(all ?: spacing.standard)
 }
@@ -35,7 +35,7 @@ fun StyleScope.AppPadding(
 fun StyleScope.AppBorder(
     borders: AppBorders,
     width: Dp? = null,
-    color: Color? = null
+    color: Color? = null,
 ) {
     color?.let { border(width ?: borders.thin, it) }
 }

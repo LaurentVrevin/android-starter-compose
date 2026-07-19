@@ -16,7 +16,6 @@ interface TopBarStyles {
  * Implémentation par défaut des styles de top bar.
  */
 class DefaultTopBarStyles : TopBarStyles {
-
     @Composable
     override fun default(): Style {
         val spacing = AppTheme.spacing

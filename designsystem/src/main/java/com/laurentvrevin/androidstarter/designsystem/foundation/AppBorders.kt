@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 data class AppBorders(
     val none: Dp = 0.dp,
     val thin: Dp = 1.dp,
-    val thick: Dp = 2.dp
+    val thick: Dp = 2.dp,
 )
 
 val LocalAppBorders = staticCompositionLocalOf { AppBorders() }

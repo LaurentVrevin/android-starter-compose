@@ -13,17 +13,18 @@ fun EmptyState(
     message: String,
     modifier: Modifier = Modifier,
     icon: (@Composable () -> Unit)? = null,
-    action: (@Composable () -> Unit)? = null
+    action: (@Composable () -> Unit)? = null,
 ) {
     val spacing = AppTheme.spacing
     val typography = AppTheme.typography
 
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(spacing.doubleLarge),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(spacing.doubleLarge),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         if (icon != null) {
             icon()
@@ -34,7 +35,7 @@ fun EmptyState(
             text = message,
             style = typography.bodyLarge,
             textAlign = TextAlign.Center,
-            color = AppTheme.colors.onSurfaceVariant
+            color = AppTheme.colors.onSurfaceVariant,
         )
 
         if (action != null) {

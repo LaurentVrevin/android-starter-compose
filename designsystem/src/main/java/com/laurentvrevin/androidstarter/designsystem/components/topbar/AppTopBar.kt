@@ -21,27 +21,27 @@ fun AppTopBar(
     title: String,
     modifier: Modifier = Modifier,
     onBackClick: (() -> Unit)? = null,
-    style: Style? = null
+    style: Style? = null,
 ) {
     val topBarStyle = style ?: AppTheme.topBarStyles.default()
     val typography = AppTheme.typography
 
     Row(
         modifier = modifier.styleable(style = topBarStyle),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         if (onBackClick != null) {
             IconButton(onClick = onBackClick) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back"
+                    contentDescription = "Back",
                 )
             }
         }
         Text(
             text = title,
             style = typography.titleLarge,
-            modifier = Modifier.padding(start = if (onBackClick == null) AppTheme.spacing.extraSmall else 0.dp)
+            modifier = Modifier.padding(start = if (onBackClick == null) AppTheme.spacing.extraSmall else 0.dp),
         )
     }
 }

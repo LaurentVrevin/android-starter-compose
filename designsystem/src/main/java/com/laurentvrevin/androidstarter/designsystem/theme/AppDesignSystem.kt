@@ -9,13 +9,12 @@ import com.laurentvrevin.androidstarter.designsystem.styles.*
 
 /**
  * Objet d'accès centralisé aux jetons (tokens) et styles du Design System.
- * 
+ *
  * Il agit comme un proxy vers les CompositionLocal injectés par [AppTheme].
  * Cette approche permet une syntaxe concise : `AppTheme.spacing.medium`
  * au lieu de `LocalAppSpacing.current.medium`.
  */
 object AppTheme {
-
     val spacing: AppSpacing
         @Composable
         @ReadOnlyComposable

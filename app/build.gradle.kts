@@ -12,6 +12,12 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "API_BASE_URL", "\"https://api.example.com/\"")
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {
@@ -19,7 +25,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -29,12 +35,14 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":data"))
     implementation(project(":designsystem"))
-    implementation(project(":feature:sample"))
+    implementation(project(":feature:template"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.lifecycle.runtime.ktx)
 
+    implementation(libs.compose.ui)
+    implementation(libs.compose.material3)
     implementation(libs.navigation.compose)
 
     implementation(libs.koin.android)

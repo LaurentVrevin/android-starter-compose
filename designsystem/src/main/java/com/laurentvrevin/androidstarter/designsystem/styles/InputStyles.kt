@@ -15,7 +15,6 @@ interface InputStyles {
  * Implémentation par défaut des styles d'inputs.
  */
 class DefaultInputStyles : InputStyles {
-
     @Composable
     override fun default(): Style {
         val spacing = AppTheme.spacing

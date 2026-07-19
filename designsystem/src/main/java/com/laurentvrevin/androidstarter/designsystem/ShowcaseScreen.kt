@@ -15,7 +15,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.laurentvrevin.androidstarter.designsystem.ui.SnackbarType
 import com.laurentvrevin.androidstarter.designsystem.components.button.*
 import com.laurentvrevin.androidstarter.designsystem.components.card.AppCard
 import com.laurentvrevin.androidstarter.designsystem.components.chip.AppChip
@@ -27,6 +26,7 @@ import com.laurentvrevin.androidstarter.designsystem.components.topbar.AppTopBar
 import com.laurentvrevin.androidstarter.designsystem.foundation.AppSize
 import com.laurentvrevin.androidstarter.designsystem.patterns.SectionBlock
 import com.laurentvrevin.androidstarter.designsystem.theme.AppTheme
+import com.laurentvrevin.androidstarter.designsystem.ui.SnackbarType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -35,7 +35,8 @@ import kotlinx.coroutines.launch
 fun ShowcaseScreen(
     isDarkTheme: Boolean,
     onThemeToggle: () -> Unit,
-    onNavigateToSample: () -> Unit = {}
+    onBackClick: (() -> Unit)? = null,
+    onNavigateToTemplate: () -> Unit = {},
 ) {
     val spacing = AppTheme.spacing
     val colors = AppTheme.colors
@@ -47,7 +48,10 @@ fun ShowcaseScreen(
 
     Scaffold(
         topBar = {
-            AppTopBar(title = "Design System Showcase")
+            AppTopBar(
+                title = "Design System Showcase",
+                onBackClick = onBackClick,
+            )
         },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState) { data ->
@@ -58,18 +62,19 @@ fun ShowcaseScreen(
             FloatingActionButton(onClick = onThemeToggle) {
                 Icon(
                     imageVector = if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode,
-                    contentDescription = "Toggle Theme"
+                    contentDescription = "Toggle Theme",
                 )
             }
-        }
+        },
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(spacing.standard),
-            verticalArrangement = Arrangement.spacedBy(spacing.doubleLarge)
+            modifier =
+                Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(spacing.standard),
+            verticalArrangement = Arrangement.spacedBy(spacing.doubleLarge),
         ) {
             // SECTION: TYPOGRAPHY
             SectionBlock(title = "Typography") {
@@ -122,7 +127,7 @@ fun ShowcaseScreen(
                 Text("Variantes (Medium)", style = typography.bodySmall)
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(spacing.small),
-                    verticalArrangement = Arrangement.spacedBy(spacing.small)
+                    verticalArrangement = Arrangement.spacedBy(spacing.small),
                 ) {
                     AppPrimaryButton("Primary", onClick = {})
                     AppSecondaryButton("Secondary", onClick = {})
@@ -134,7 +139,7 @@ fun ShowcaseScreen(
                 Text("Tailles (Primary)", style = typography.bodySmall)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(spacing.small)
+                    horizontalArrangement = Arrangement.spacedBy(spacing.small),
                 ) {
                     AppPrimaryButton("Small", size = AppSize.Small, onClick = {})
                     AppPrimaryButton("Medium", size = AppSize.Medium, onClick = {})
@@ -158,7 +163,7 @@ fun ShowcaseScreen(
                     value = text,
                     onValueChange = { text = it },
                     label = "Default Input",
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
                 AppInput(
                     value = "Invalid content",
@@ -166,7 +171,7 @@ fun ShowcaseScreen(
                     label = "Error Input",
                     isError = true,
                     errorMessage = "This field is required",
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
 
@@ -177,24 +182,24 @@ fun ShowcaseScreen(
                 }
                 AppCard(
                     modifier = Modifier.fillMaxWidth(),
-                    style = AppTheme.cardStyles.elevated()
+                    style = AppTheme.cardStyles.elevated(),
                 ) {
                     Text("Elevated Card with Shadow Level 2", style = typography.bodyLarge)
                 }
                 AppCard(
                     modifier = Modifier.fillMaxWidth(),
-                    style = AppTheme.cardStyles.outlined()
+                    style = AppTheme.cardStyles.outlined(),
                 ) {
                     Text("Outlined Card", style = typography.bodyLarge)
                 }
             }
 
             // SECTION: UI STATE & FEEDBACK
-            SectionBlock(title = "Navigation & Samples") {
+            SectionBlock(title = "Navigation & Templates") {
                 AppPrimaryButton(
-                    text = "Go to Sample Feature",
-                    onClick = onNavigateToSample,
-                    modifier = Modifier.fillMaxWidth()
+                    text = "Go to Template Feature",
+                    onClick = onNavigateToTemplate,
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
 
@@ -209,7 +214,7 @@ fun ShowcaseScreen(
                             snackbarHostState.showSnackbar("This is a default message")
                         }
                     }, size = AppSize.Small)
-                    
+
                     AppPrimaryButton("Success", onClick = {
                         scope.launch {
                             currentSnackbarType = SnackbarType.Success
@@ -242,10 +247,10 @@ fun ShowcaseScreen(
                         message = "No items found. Try searching for something else.",
                         action = {
                             AppOutlinedButton("Retry", onClick = {}, size = AppSize.Small)
-                        }
+                        },
                     )
                 }
-                
+
                 LoadingOverlay(isLoading = showGlobalLoader)
             }
 
@@ -255,28 +260,38 @@ fun ShowcaseScreen(
 }
 
 @Composable
-private fun ColorBox(label: String, color: Color, onColor: Color, modifier: Modifier = Modifier) {
+private fun ColorBox(
+    label: String,
+    color: Color,
+    onColor: Color,
+    modifier: Modifier = Modifier,
+) {
     Box(
-        modifier = modifier
-            .height(80.dp)
-            .clip(AppTheme.shapes.medium)
-            .background(color)
-            .padding(AppTheme.spacing.extraSmall),
-        contentAlignment = Alignment.BottomStart
+        modifier =
+            modifier
+                .height(80.dp)
+                .clip(AppTheme.shapes.medium)
+                .background(color)
+                .padding(AppTheme.spacing.extraSmall),
+        contentAlignment = Alignment.BottomStart,
     ) {
         Text(label, color = onColor, style = AppTheme.typography.labelMedium)
     }
 }
 
 @Composable
-private fun SpacingBar(label: String, width: androidx.compose.ui.unit.Dp, color: Color) {
+private fun SpacingBar(
+    label: String,
+    width: androidx.compose.ui.unit.Dp,
+    color: Color,
+) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(label, modifier = Modifier.width(40.dp), style = AppTheme.typography.labelMedium)
         Box(
             Modifier
                 .height(12.dp)
                 .width(width)
-                .background(color)
+                .background(color),
         )
         Text(" ${width.value.toInt()}dp", style = AppTheme.typography.labelMedium)
     }

@@ -7,40 +7,49 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.laurentvrevin.androidstarter.designsystem.ShowcaseScreen
-import com.laurentvrevin.androidstarter.feature.sample.SampleScreen
+import com.laurentvrevin.androidstarter.feature.template.presentation.TemplateScreen
+import com.laurentvrevin.androidstarter.ui.StartScreen
 import kotlinx.serialization.Serializable
+
+@Serializable
+data object StartRoute
 
 @Serializable
 data object ShowcaseRoute
 
 @Serializable
-data object SampleRoute
+data object TemplateRoute
 
 @Composable
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     isDarkTheme: Boolean,
-    onThemeToggle: () -> Unit
+    onThemeToggle: () -> Unit,
 ) {
     NavHost(
         navController = navController,
-        startDestination = ShowcaseRoute,
-        modifier = modifier
+        startDestination = StartRoute,
+        modifier = modifier,
     ) {
+        composable<StartRoute> {
+            StartScreen(
+                onNavigateToShowcase = { navController.navigate(ShowcaseRoute) },
+                onNavigateToTemplate = { navController.navigate(TemplateRoute) },
+            )
+        }
+
         composable<ShowcaseRoute> {
             ShowcaseScreen(
                 isDarkTheme = isDarkTheme,
                 onThemeToggle = onThemeToggle,
-                onNavigateToSample = {
-                    navController.navigate(SampleRoute)
-                }
+                onBackClick = { navController.popBackStack() },
             )
         }
 
-        composable<SampleRoute> {
-            SampleScreen(
-                onBack = { navController.popBackStack() }
+        composable<TemplateRoute> {
+            TemplateScreen(
+                onBack = { navController.popBackStack() },
             )
         }
     }

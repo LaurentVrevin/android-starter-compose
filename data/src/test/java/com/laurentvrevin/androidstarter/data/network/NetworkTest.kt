@@ -19,7 +19,6 @@ import org.junit.Test
 data class MockDto(val id: Int, val name: String)
 
 class NetworkTest : BaseRepository() {
-
     private fun createMockClient(handler: MockRequestHandler): HttpClient {
         return HttpClient(MockEngine) {
             expectSuccess = true
@@ -33,53 +32,58 @@ class NetworkTest : BaseRepository() {
     }
 
     @Test
-    fun `safeCall returns Success when API call is successful`() = runTest {
-        val client = createMockClient { request ->
-            respond(
-                content = """{"id": 1, "name": "Test"}""",
-                status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, "application/json")
-            )
+    fun `safeCall returns Success when API call is successful`() =
+        runTest {
+            val client =
+                createMockClient { request ->
+                    respond(
+                        content = """{"id": 1, "name": "Test"}""",
+                        status = HttpStatusCode.OK,
+                        headers = headersOf(HttpHeaders.ContentType, "application/json"),
+                    )
+                }
+
+            val dto = client.get("test").body<MockDto>()
+            assertEquals(1, dto.id)
+
+            val result = safeCall { client.get("test").body<MockDto>() }
+
+            if (result is NetworkResult.Error) {
+                println("Test failed with error: ${result.error}")
+            }
+            assertTrue("Expected Success but got $result", result is NetworkResult.Success)
         }
 
-        val dto = client.get("test").body<MockDto>()
-        assertEquals(1, dto.id)
+    @Test
+    fun `safeCall returns Unauthorized error on 401 response`() =
+        runTest {
+            val client = createMockClient { respond("", HttpStatusCode.Unauthorized) }
 
-        val result = safeCall { client.get("test").body<MockDto>() }
+            val result = safeCall { client.get("test").body<MockDto>() }
 
-        if (result is NetworkResult.Error) {
-            println("Test failed with error: ${result.error}")
+            assertTrue(result is NetworkResult.Error)
+            assertEquals(NetworkError.Unauthorized, (result as NetworkResult.Error).error)
         }
-        assertTrue("Expected Success but got $result", result is NetworkResult.Success)
-    }
 
     @Test
-    fun `safeCall returns Unauthorized error on 401 response`() = runTest {
-        val client = createMockClient { respond("", HttpStatusCode.Unauthorized) }
+    fun `safeCall returns NotFound error on 404 response`() =
+        runTest {
+            val client = createMockClient { respond("", HttpStatusCode.NotFound) }
 
-        val result = safeCall { client.get("test").body<MockDto>() }
+            val result = safeCall { client.get("test").body<MockDto>() }
 
-        assertTrue(result is NetworkResult.Error)
-        assertEquals(NetworkError.Unauthorized, (result as NetworkResult.Error).error)
-    }
-
-    @Test
-    fun `safeCall returns NotFound error on 404 response`() = runTest {
-        val client = createMockClient { respond("", HttpStatusCode.NotFound) }
-
-        val result = safeCall { client.get("test").body<MockDto>() }
-
-        assertTrue(result is NetworkResult.Error)
-        assertEquals(NetworkError.NotFound, (result as NetworkResult.Error).error)
-    }
+            assertTrue(result is NetworkResult.Error)
+            assertEquals(NetworkError.NotFound, (result as NetworkResult.Error).error)
+        }
 
     @Test
-    fun `safeCall returns ServerError on 500 response`() = runTest {
-        val client = createMockClient { respond("", HttpStatusCode.InternalServerError) }
+    fun `safeCall returns ServerError on 500 response`() =
+        runTest {
+            val client = createMockClient { respond("", HttpStatusCode.InternalServerError) }
 
-        val result = safeCall { client.get("test").body<MockDto>() }
+            val result = safeCall { client.get("test").body<MockDto>() }
 
-        assertTrue(result is NetworkResult.Error)
-        assertEquals(NetworkError.ServerError, (result as NetworkResult.Error).error)
-    }
+            assertTrue(result is NetworkResult.Error)
+            assertEquals(NetworkError.ServerError, (result as NetworkResult.Error).error)
+        }
 }

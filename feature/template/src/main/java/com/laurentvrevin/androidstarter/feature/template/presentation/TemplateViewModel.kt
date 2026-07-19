@@ -1,0 +1,41 @@
+package com.laurentvrevin.androidstarter.feature.template.presentation
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.laurentvrevin.androidstarter.feature.template.domain.TemplateRepository
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+
+class TemplateViewModel(
+    private val repository: TemplateRepository,
+) : ViewModel() {
+    private val _state = MutableStateFlow(TemplateUiState())
+    val state: StateFlow<TemplateUiState> = _state.asStateFlow()
+
+    init {
+        observeTemplates()
+    }
+
+    private fun observeTemplates() {
+        repository.getTemplates()
+            .onEach { items ->
+                _state.update { it.copy(items = items, isInitialLoading = false, isRefreshing = false) }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    fun addTemplate(
+        title: String,
+        description: String,
+    ) {
+        viewModelScope.launch {
+            repository.addTemplate(title, description)
+        }
+    }
+
+    fun deleteTemplate(id: Int) {
+        viewModelScope.launch {
+            repository.deleteTemplate(id)
+        }
+    }
+}

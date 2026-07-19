@@ -12,7 +12,7 @@ data class AppShapes(
     val medium: Shape = RoundedCornerShape(12.dp),
     val large: Shape = RoundedCornerShape(16.dp),
     val extraLarge: Shape = RoundedCornerShape(24.dp),
-    val pill: Shape = RoundedCornerShape(999.dp)
+    val pill: Shape = RoundedCornerShape(999.dp),
 )
 
 val LocalAppShapes = staticCompositionLocalOf { AppShapes() }

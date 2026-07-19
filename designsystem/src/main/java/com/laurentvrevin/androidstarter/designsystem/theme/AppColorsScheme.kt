@@ -13,7 +13,6 @@ import androidx.compose.ui.graphics.Color
  * une structure compatible avec le dark mode et plus facile à maintenir.
  */
 object AppLightColors {
-
     /**
      * Couleur d'accent principale.
      *
@@ -138,7 +137,6 @@ object AppLightColors {
  * est affichée en mode sombre.
  */
 object AppDarkColors {
-
     /**
      * Couleur d'accent principale en mode sombre.
      */

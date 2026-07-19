@@ -16,12 +16,12 @@ import com.laurentvrevin.androidstarter.designsystem.theme.AppTheme
 fun AppCard(
     modifier: Modifier = Modifier,
     style: Style? = null,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val cardStyle = style ?: AppTheme.cardStyles.default()
-    
+
     Column(
-        modifier = modifier.styleable(style = cardStyle)
+        modifier = modifier.styleable(style = cardStyle),
     ) {
         content()
     }
@@ -33,7 +33,7 @@ private fun AppCardPreview() {
     AppTheme {
         Column(
             modifier = Modifier.padding(AppTheme.spacing.standard),
-            verticalArrangement = Arrangement.spacedBy(AppTheme.spacing.standard)
+            verticalArrangement = Arrangement.spacedBy(AppTheme.spacing.standard),
         ) {
             AppCard {
                 Text("Default Card Content")

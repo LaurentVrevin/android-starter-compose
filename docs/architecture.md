@@ -1,50 +1,44 @@
 # Architecture du Projet
 
-Le projet **AndroidStarter** suit les principes de la **Clean Architecture** adaptés au développement Android moderne. L'objectif est de garantir une séparation stricte des responsabilités, une testabilité accrue et une grande scalabilité.
+Le projet **AndroidStarter** suit les principes de la **Clean Architecture** adaptés au développement Android moderne.
 
 ---
 
 ## 1. Structure Multi-Modules
 
-Le projet est éclaté en modules Gradle isolés pour favoriser la compilation incrémentale et l'isolation des couches :
-
-### `:core` (Infrastructure)
-Module pur Kotlin léger.
-- **`util/`** : Utilitaires génériques (ex: `Mapper`).
-- **`model/`** : Modèles de données partagés entre les modules.
+### `:core` (Infrastructure Légère)
+Module pur Kotlin.
+- **`util/`** : Utilitaires génériques.
+- **`model/`** : Modèles de données réellement globaux.
 
 ### `:data` (Persistance & Réseau)
 Implémentation concrète de l'accès aux données.
-- **`base/`** : Classes de base pour les repositories.
-- **`network/`** : Types de retour et erreurs réseau.
-- **`local/`** : Room Database, DataStore (via `AppPreferences`), Entities, DAOs.
+- **`base/`** : Classes de base (ex: `BaseRepository`).
+- **`local/`** : Room Database, DataStore (via `AppPreferences`).
 - **`remote/`** : Configuration Ktor ([**`KtorClientFactory.kt`**](../data/src/main/java/com/laurentvrevin/androidstarter/data/remote/KtorClientFactory.kt)).
-- **`di/`** : Modules Koin `:data`.
+- **`di/`** : Modules Koin techniques.
 
 ### `:designsystem` (Framework UI)
-- **`foundation/`** : Jetons de design (Spacing, Shapes, Dimensions).
+- **`foundation/`** : Jetons de design (Spacing, Shapes, Typography).
 - **`components/`** : Composants atomiques réutilisables.
-- **`ui/`** : Helpers UI (`UiState`, `UiEvent`, `FeedbackManager`, `UiText`).
-- **`theme/`** : Point d'accès unique.
+- **`styles/`** : Logique de style centralisée.
+- **`ui/`** : Helpers UI (`UiText`, `UiEvent`).
 
-### `:feature:sample` (Démonstration)
+### `:feature:template` (Modèle de Feature)
 Feature verticale d'exemple démontrant le flux complet.
-- Contient son propre `ViewModel`, `Screen`, `UiState` et son module Koin.
+- **`presentation/`** : UI et ViewModel.
+- **`domain/`** : Modèles et interfaces repository.
+- **`data/`** : Implémentation du repository.
 
 ### `:app` (Orchestration)
-Le point d'entrée Android.
+Point d'entrée Android.
 - Assemble les modules DI.
 - Gère la **Navigation globale** via [`AppNavHost`](../app/src/main/java/com/laurentvrevin/androidstarter/navigation/AppNavHost.kt).
 
 ---
 
-## 2. Clean Architecture "Offline-First"
+## 2. Flux de données (Offline-First)
 
-Nous imposons un flux de données strict pour garantir une expérience utilisateur fluide :
-
-1.  **UI Layer** : Observe un `Flow` de données provenant uniquement du Repository.
-2.  **Repository Layer** : Sert de pont. Il récupère les données du réseau, les enregistre dans la base locale (SSOT) et laisse le Flow réactif mettre à jour l'UI.
-3.  **Data Layer** : Fournit les implémentations Ktor et Room.
-
-> [!TIP]
-> Toujours utiliser le pattern **Single Source of Truth (SSOT)** : L'UI n'observe JAMAIS directement le réseau, seulement la base de données locale.
+1.  **UI Layer** : Observe un `Flow` de données.
+2.  **Repository** : Gère la synchronisation entre Local (Room) et Remote (Ktor).
+3.  **Local Source** : Sert de **Single Source of Truth (SSOT)**.

@@ -2,68 +2,68 @@
 
 Bienvenue dans votre **Android Starter Pack**. Ce projet est une base de démarrage (boilerplate) robuste et moderne conçue pour accélérer le développement d'applications Android de qualité professionnelle.
 
-Il intègre les dernières technologies Jetpack Compose, une architecture modulaire et un Design System ultra-flexible.
-
 ---
 
 ## 🛠 Stack Technique
 
-Le projet utilise les standards les plus récents du développement Android :
-
 - **Kotlin 2.0** : Nouveau compilateur K2.
-- **Jetpack Compose (BOM 2026.06.01)** : Développement UI déclaratif.
-- **Material 3 (1.4.0)** : Support du Dynamic Color.
-- **Koin (4.1.1)** : Injection de dépendances légère.
-- **Ktor Client** : Réseau résilient et performant.
+- **Jetpack Compose (BOM)** : Développement UI déclaratif.
+- **Material 3** : Design system moderne avec support du Dynamic Color.
+- **Koin** : Injection de dépendances légère.
+- **Ktor Client** : Réseau résilient et configurable.
 - **Room & DataStore** : Persistance locale (Offline-First).
 - **Coroutines & Flow** : Gestion asynchrone réactive.
 
 ---
 
-## 🏗 Architecture du Projet
+## 🏗 Architecture
 
-Le projet suit une architecture **multi-modules** pour favoriser la scalabilité et l'isolation des responsabilités :
+Le projet suit une architecture **multi-modules** propre et évolutive :
 
 ```text
 AndroidStarter/
-├── :app                # Point d'entrée, Navigation globale et DI final
-├── :core               # Utilitaires transversaux légers
-├── :data               # Couche données (Ktor, Room, DataStore, Repositories)
-├── :designsystem       # UI Framework (Thèmes, Composants réutilisables)
-├── :feature:sample     # Feature d'exemple (à supprimer ou renommer)
-└── build-logic/        # Convention Plugins (Configuration centralisée)
+├── :app                # Orchestration, Navigation globale, Configuration (BuildConfig)
+├── :core               # Infrastructure légère, utilitaires transversaux
+├── :data               # Couche données (Ktor, Room, DataStore)
+├── :designsystem       # UI Framework complet (Tokens, Styles, Composants, Themes)
+├── :feature:template   # Feature d'exemple pédagogique (à copier ou supprimer)
+└── build-logic/        # Convention Plugins Gradle
 ```
+
+---
+
+## ✨ Personnaliser le Design System
+
+Le design system est centralisé dans le module `:designsystem`. Pour le rebrander :
+
+1.  **Couleurs** : Modifiez les palettes primitives dans `foundation/AppColorsScheme.kt`.
+2.  **Typographie** : Ajustez les polices et échelles dans `foundation/AppTypography.kt`.
+3.  **Thème** : Vérifiez l'assemblage clair/sombre dans `theme/AppTheme.kt`.
+4.  **Styles** : Ajustez les variantes globales (Boutons, Cartes, Champs) dans le package `styles/`.
+5.  **Visualisation** : Utilisez le **Showcase** intégré pour valider vos changements instantanément.
+
+---
+
+## 🚀 Créer une nouvelle application depuis le starter
+
+1.  **Dupliquer** le repository.
+2.  **Renommer** le projet via les scripts :
+    - Windows : `./scripts/rename_project.ps1 -NewPackageName "com.votre.app" -NewAppName "MonApp"`
+    - Bash : `./scripts/rename_project.sh "com.votre.app" "MonApp"`
+3.  **Modifier** le nom visible dans `res/values/strings.xml`.
+4.  **Supprimer** la feature Template une fois les bases comprises (voir guide dans `docs/`).
+5.  **Lancer** `./gradlew assembleDebug` pour valider.
 
 ---
 
 ## 📚 Documentation Technique
 
-Pour bien prendre en main le starter pack, consultez les guides détaillés par thématique :
-
-1.  📂 [**Architecture & Organisation**](docs/architecture.md) : Clean Architecture, packages et DI (Koin).
-2.  🎨 [**Design System & UI**](docs/design_system.md) : Tokens, Styles API et composants de feedback.
-3.  🌐 [**Réseau (Ktor)**](docs/network.md) : Pattern Result, gestion d'erreurs et mocking.
-4.  💾 [**Données (Room & DataStore)**](docs/data.md) : Persistance, SSOT et mappers.
-5.  🚦 [**UI State & Feedback**](docs/ui_state.md) : Gestion des états et événements éphémères.
-6.  🧪 [**Stratégie de Test**](docs/testing.md) : Tests unitaires Network et instrumentation Database.
-
----
-
-## 🚀 Prise en main rapide
-
-1.  **Renommer le Projet** : Consultez le [**Guide de Renommage**](docs/renaming.md) pour personnaliser le package name et le nom de l'app.
-2.  **Explorer l'exemple** : Accédez à la feature `:feature:sample` pour voir une implémentation complète (UI -> ViewModel -> Repo -> Data).
-3.  **Vérification** : Lancez `./gradlew lint test assembleDebug` pour valider votre environnement.
-
----
-
-## 📺 Aperçu Interactif
-
-L'écran de **Showcase** intégré permet de tester :
-- Le basculement Light/Dark mode.
-- L'échelle de spacing et shapes.
-- Tous les composants (Buttons, Cards, Chips, Inputs).
-- La simulation de synchronisation de données.
+1.  📂 [**Architecture & Organisation**](docs/architecture.md)
+2.  🎨 [**Design System & UI**](docs/design_system.md)
+3.  🌐 [**Réseau (Ktor)**](docs/network.md)
+4.  💾 [**Données (Room & DataStore)**](docs/data.md)
+5.  🧪 [**Stratégie de Test**](docs/testing.md)
+6.  🔄 [**Guide de Renommage**](docs/renaming.md)
 
 ---
 

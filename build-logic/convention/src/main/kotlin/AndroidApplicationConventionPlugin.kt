@@ -10,6 +10,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.application")
                 apply("org.jetbrains.kotlin.android")
+                apply("org.jlleitschuh.gradle.ktlint")
             }
 
             extensions.configure<ApplicationExtension> {
@@ -20,14 +21,14 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                 }
                 compileOptions {
-                    sourceCompatibility = org.gradle.api.JavaVersion.VERSION_11
-                    targetCompatibility = org.gradle.api.JavaVersion.VERSION_11
+                    sourceCompatibility = org.gradle.api.JavaVersion.VERSION_17
+                    targetCompatibility = org.gradle.api.JavaVersion.VERSION_17
                 }
             }
 
             tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
                 kotlinOptions {
-                    jvmTarget = "11"
+                    jvmTarget = "17"
                 }
             }
         }

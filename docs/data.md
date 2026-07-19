@@ -16,25 +16,25 @@ Tous les DAOs doivent hériter de [`BaseDao<T>`](../data/src/main/java/com/laure
 
 ## 2. Préférences (DataStore)
 
-Pour les données simples (settings, tokens), nous utilisons [`PreferenceManager`](../data/src/main/java/com/laurentvrevin/androidstarter/data/local/PreferenceManager.kt).
+Pour les données simples (thème, réglages, jetons), nous utilisons [`AppPreferences`](../data/src/main/java/com/laurentvrevin/androidstarter/data/local/AppPreferences.kt).
 
-L'accès est entièrement réactif via des `Flow` :
+L'accès est typé et réactif :
 ```kotlin
-// Lecture
-val isDarkMode: Flow<Boolean> = preferenceManager.getBoolean("dark_mode")
+// Lecture via Flow
+val isDarkMode: Flow<Boolean?> = appPreferences.isDarkTheme
 
 // Écriture (suspend)
-preferenceManager.saveBoolean("dark_mode", true)
+appPreferences.setDarkTheme(true)
 ```
 
 ---
 
 ## 3. Séparation des modèles (Mappers)
 
-Pour garder un code propre, utilisez l'interface [`Mapper<I, O>`](../core/src/main/java/com/laurentvrevin/androidstarter/core/util/Mapper.kt) :
+Pour garder un code propre, utilisez des extensions de mapping (voir [`SampleEntity.kt`](../data/src/main/java/com/laurentvrevin/androidstarter/data/local/entities/SampleEntity.kt)) :
 - **DTO** : Modèle API.
 - **Entity** : Modèle Room.
-- **Domain** : Modèle UI.
+- **External Model** : Modèle métier partagé (dans `:core:model`).
 
 ---
 

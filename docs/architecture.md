@@ -9,29 +9,32 @@ Le projet **AndroidStarter** suit les principes de la **Clean Architecture** ada
 Le projet est éclaté en modules Gradle isolés pour favoriser la compilation incrémentale et l'isolation des couches :
 
 ### `:core` (Infrastructure)
-Module pur Kotlin/Compose sans logique métier.
-- **`base/`** : Classes de base (ex: `BaseRepository`).
-- **`network/`** : Types de retour réseau (`NetworkResult`, `NetworkError`).
-- **`ui/`** : Abstractions pour l'interface utilisateur (`UiState`, `UiEvent`, `FeedbackManager`).
+Module pur Kotlin léger.
 - **`util/`** : Utilitaires génériques (ex: `Mapper`).
-- **`di/`** : Module Koin `:core` ([**`UiModule.kt`**](../core/src/main/java/com/laurentvrevin/androidstarter/core/di/UiModule.kt)).
+- **`model/`** : Modèles de données partagés entre les modules.
 
 ### `:data` (Persistance & Réseau)
 Implémentation concrète de l'accès aux données.
-- **`local/`** : Room Database, DataStore, Entities, DAOs.
-- **`remote/`** : Configuration Ktor ([**`KtorClientFactory.kt`**](../data/src/main/java/com/laurentvrevin/androidstarter/data/remote/KtorClientFactory.kt)), API Services.
-- **`di/`** : Modules Koin `:data` ([**`DataModule.kt`**](../data/src/main/java/com/laurentvrevin/androidstarter/data/di/DataModule.kt), [**`NetworkModule.kt`**](../data/src/main/java/com/laurentvrevin/androidstarter/data/di/NetworkModule.kt)).
+- **`base/`** : Classes de base pour les repositories.
+- **`network/`** : Types de retour et erreurs réseau.
+- **`local/`** : Room Database, DataStore (via `AppPreferences`), Entities, DAOs.
+- **`remote/`** : Configuration Ktor ([**`KtorClientFactory.kt`**](../data/src/main/java/com/laurentvrevin/androidstarter/data/remote/KtorClientFactory.kt)).
+- **`di/`** : Modules Koin `:data`.
 
 ### `:designsystem` (Framework UI)
-Le cerveau visuel de l'application.
 - **`foundation/`** : Jetons de design (Spacing, Shapes, Dimensions).
 - **`components/`** : Composants atomiques réutilisables.
-- **`styles/`** : Logique de style et providers.
-- **`theme/`** : Point d'accès unique ([**`AppTheme`**](../designsystem/src/main/java/com/laurentvrevin/androidstarter/designsystem/theme/AppDesignSystem.kt)).
+- **`ui/`** : Helpers UI (`UiState`, `UiEvent`, `FeedbackManager`, `UiText`).
+- **`theme/`** : Point d'accès unique.
+
+### `:feature:sample` (Démonstration)
+Feature verticale d'exemple démontrant le flux complet.
+- Contient son propre `ViewModel`, `Screen`, `UiState` et son module Koin.
 
 ### `:app` (Orchestration)
 Le point d'entrée Android.
-- Contient la `MainActivity` et la classe [`App.kt`](../app/src/main/java/com/laurentvrevin/androidstarter/App.kt) qui assemble tous les modules Koin.
+- Assemble les modules DI.
+- Gère la **Navigation globale** via [`AppNavHost`](../app/src/main/java/com/laurentvrevin/androidstarter/navigation/AppNavHost.kt).
 
 ---
 

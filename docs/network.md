@@ -1,54 +1,45 @@
 # Couche Réseau (Ktor)
 
-L'infrastructure réseau repose sur **Ktor Client**, configuré pour la résilience et la facilité de débogage.
+L'application utilise **Ktor Client** pour ses appels réseau, configuré de manière résiliente et sécurisée.
 
 ---
 
-## 1. Configuration du Client
+## 1. Architecture
 
-Le `HttpClient` est créé via la [**`KtorClientFactory`**](../data/src/main/java/com/laurentvrevin/androidstarter/data/remote/KtorClientFactory.kt) dans le module `:data` :
-- **Engine** : OkHttp.
-- **Serialization** : JSON (Kotlinx Serialization).
-- **Logging** : Logs complets en debug.
-- **Timeouts** : 15 secondes par défaut.
+La couche réseau est centralisée dans le module `:data`.
+
+- **`KtorClientFactory`** : Centralise la configuration (Serialization, Logging, Timeouts, Base URL).
+- **`NetworkConfig`** : Permet d'injecter des paramètres différents selon le build type (Debug/Release).
+- **`BaseRepository`** : Fournit la méthode `safeCall` pour sécuriser tous les appels API.
 
 ---
 
-## 2. Pattern de Résilience : `NetworkResult`
+## 2. Pattern de retour
 
-Tous les appels API doivent retourner un [`NetworkResult<T>`](../core/src/main/java/com/laurentvrevin/androidstarter/core/network/NetworkResult.kt).
+Tous les appels API doivent être encapsulés dans un `NetworkResult<T>` via `safeCall`.
 
 ```kotlin
-sealed interface NetworkResult<out T> {
-    data class Success<out T>(val data: T) : NetworkResult<T>
-    data class Error(val error: NetworkError) : NetworkResult<Nothing>
+suspend fun fetchData(): NetworkResult<MyDto> = safeCall {
+    client.get("endpoint").body()
 }
 ```
 
-### Types d'erreurs gérés
-Le système traduit automatiquement les codes HTTP en [`NetworkError`](../core/src/main/java/com/laurentvrevin/androidstarter/core/network/NetworkError.kt) via le `BaseRepository`.
+### Avantages :
+1.  **Gestion des erreurs typée** : Oblige à traiter les cas d'erreur (`Unauthorized`, `ServerError`, `NoInternet`).
+2.  **Sécurité Coroutines** : Propagera correctement la `CancellationException`.
+3.  **Logging** : Les erreurs techniques sont logguées proprement sans polluer l'UI.
 
 ---
 
-## 3. Utilisation dans un Repository
+## 3. Configuration de production
 
-Héritez de `BaseRepository` pour bénéficier de la méthode `safeCall`.
-
-```kotlin
-class ProductRepository(private val client: HttpClient) : BaseRepository() {
-    
-    suspend fun getProducts(): NetworkResult<List<ProductDto>> = safeCall {
-        client.get("products").body()
-    }
-}
-```
+- **Logging** : Désactivé en production pour des raisons de sécurité et de performance.
+- **Timeouts** : Fixés à 15s par défaut pour éviter les appels bloqués.
+- **Serialization** : Utilise Kotlinx Serialization configuré avec `ignoreUnknownKeys = true`.
 
 ---
 
-## 4. Fiabilité & Debug
+## 4. Tests
 
-- **Logs** : En mode debug, toutes les requêtes/réponses sont affichées dans Logcat sous le tag `HttpClient`.
-- **Tests** : Utilisez le `MockEngine` pour simuler des réponses API. Voir [**`NetworkTest.kt`**](../core/src/test/java/com/laurentvrevin/androidstarter/core/network/NetworkTest.kt).
-
-> [!TIP]
-> Utilisez toujours `safeCall` pour envelopper vos appels Ktor afin de garantir qu'aucune exception technique ne remonte jusqu'à l'UI.
+Utilisez le `MockEngine` de Ktor pour simuler des réponses API. 
+Voir l'exemple dans [**`NetworkTest.kt`**](../data/src/test/java/com/laurentvrevin/androidstarter/data/network/NetworkTest.kt).

@@ -8,23 +8,10 @@ android {
 }
 
 dependencies {
-    implementation(platform(libs.compose.bom))
     implementation(libs.androidx.core.ktx)
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.kotlinx.serialization.json)
-    
-    // Compose dependencies needed for UiState and Feedback
-    implementation(libs.compose.ui)
-    implementation(libs.compose.foundation)
-    implementation(libs.compose.material3)
-
-    implementation(libs.koin.android)
-    implementation(libs.koin.compose)
 
     // Testing
     testImplementation(libs.junit)
-    testImplementation(libs.ktor.client.mock)
     testImplementation(libs.kotlinx.coroutines.test)
 }

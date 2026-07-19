@@ -2,7 +2,9 @@ package com.laurentvrevin.androidstarter
 
 import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.Project
+import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.withType
 
 internal fun Project.configureAndroidCompose(
@@ -14,6 +16,8 @@ internal fun Project.configureAndroidCompose(
         }
     }
 
+    val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
         kotlinOptions {
             freeCompilerArgs += listOf(
@@ -23,8 +27,8 @@ internal fun Project.configureAndroidCompose(
     }
 
     dependencies {
-        // Hardcoded for now to bypass VersionCatalogsExtension issue
-        add("implementation", platform("androidx.compose:compose-bom:2026.06.01"))
-        add("androidTestImplementation", platform("androidx.compose:compose-bom:2026.06.01"))
+        val bom = libs.findLibrary("compose-bom").get()
+        add("implementation", platform(bom))
+        add("androidTestImplementation", platform(bom))
     }
 }

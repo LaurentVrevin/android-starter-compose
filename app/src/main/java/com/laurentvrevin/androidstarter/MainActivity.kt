@@ -8,19 +8,29 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.laurentvrevin.androidstarter.designsystem.ShowcaseScreen
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import com.laurentvrevin.androidstarter.designsystem.theme.AppTheme
+import com.laurentvrevin.androidstarter.navigation.AppNavHost
+import com.laurentvrevin.androidstarter.ui.MainViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
+    
+    private val viewModel: MainViewModel by viewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            var isDarkTheme by remember { mutableStateOf(false) }
+            val isDarkThemePref by viewModel.isDarkTheme.collectAsState()
+            val isDarkTheme = isDarkThemePref ?: isSystemInDarkTheme()
+            
             AppTheme(darkTheme = isDarkTheme) {
-                ShowcaseScreen(
+                AppNavHost(
                     isDarkTheme = isDarkTheme,
-                    onThemeToggle = { isDarkTheme = !isDarkTheme }
+                    onThemeToggle = { viewModel.toggleTheme(!isDarkTheme) }
                 )
             }
         }

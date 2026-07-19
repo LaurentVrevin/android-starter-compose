@@ -11,28 +11,25 @@ import kotlinx.serialization.json.Json
 object KtorClientFactory {
 
     /**
-     * Configure le client HTTP Ktor avec les meilleurs paramètres de production.
-     * 
-     * - Engine: OkHttp (standard Android)
-     * - ContentNegotiation: JSON via Kotlinx Serialization
-     * - Logging: Logs complets pour le debug
-     * - Timeouts: Sécurité contre les appels bloqués
+     * Configure le client HTTP Ktor.
      */
-    fun create(): HttpClient {
+    fun create(config: NetworkConfig): HttpClient {
         return HttpClient(OkHttp) {
             expectSuccess = true
             install(ContentNegotiation) {
                 json(Json {
                     ignoreUnknownKeys = true
-                    prettyPrint = true
+                    prettyPrint = config.isDebug
                     isLenient = true
                     encodeDefaults = true
                 })
             }
 
-            install(Logging) {
-                logger = Logger.ANDROID
-                level = LogLevel.ALL
+            if (config.isDebug) {
+                install(Logging) {
+                    logger = Logger.ANDROID
+                    level = config.logLevel
+                }
             }
 
             install(HttpTimeout) {
@@ -42,8 +39,7 @@ object KtorClientFactory {
             }
 
             defaultRequest {
-                // Configurer l'URL de base ici si nécessaire
-                // url("https://api.example.com/")
+                url(config.baseUrl)
             }
         }
     }

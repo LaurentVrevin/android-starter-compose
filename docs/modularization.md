@@ -1,56 +1,51 @@
 # Scalabilité & Modularisation
 
-Le projet **AndroidStarter** est structuré de manière multi-modules pour garantir une maintenance aisée et des temps de compilation optimisés.
+Le projet **AndroidStarter** est structuré de manière multi-modules pour garantir une maintenance aisée et des performances de compilation optimales.
 
 ---
 
-## 1. Structure Multi-Modules
+## 1. Structure des Modules
 
-### `:core` (Infrastructure)
-Le module de base sans dépendances Android lourdes.
-- **Responsabilité** : Types de base, `UiState`, `NetworkResult`, utilitaires de mapping.
-- **Dépendances** : Kotlin, Coroutines, Serialization.
+### `:core` (Infrastructure Légère)
+Types transversaux purs Kotlin.
+- **Responsabilité** : Modèles partagés (`:core:model`), utilitaires génériques.
+- **Dépendances** : Minimales (Kotlin, Serialization).
 
 ### `:designsystem` (UI Framework)
-Le module contenant tout l'aspect visuel.
-- **Responsabilité** : Tokens, Styles, Composants atomiques, Thème.
-- **Dépendances** : `:core`, Compose, Material 3.
+Le système de design isolé.
+- **Responsabilité** : Tokens, Thèmes, Composants atomiques réutilisables, Helpers UI (`UiText`, `UiEvent`).
+- **Dépendances** : Compose, Material 3.
 
-### `:data` (Persistance & Réseau)
-Le module gérant l'accès aux données.
-- **Responsabilité** : Room, DataStore, Ktor, Repositories.
-- **Dépendances** : `:core`, Room, Ktor, Koin.
+### `:data` (Couche Données)
+L'implémentation de la persistance et du réseau.
+- **Responsabilité** : Room, DataStore, Ktor, Repositories concrets.
+- **Dépendances** : `:core`, Room, Ktor.
 
-### `:app` (Orchestration)
-Le point d'entrée de l'application.
-- **Responsabilité** : `MainActivity`, `Application`, Navigation globale, Injection de dépendances finale.
+### `:feature:sample` (Exemple)
+Feature verticale complète servant de modèle.
+- **Responsabilité** : Logique métier et UI d'un écran spécifique.
 - **Dépendances** : `:core`, `:designsystem`, `:data`.
+
+### `:app` (Orchestration Finale)
+Point d'entrée Android.
+- **Responsabilité** : `MainActivity`, Navigation globale, Assemblage de l'injection de dépendances.
+- **Dépendances** : Tous les modules de feature.
 
 ---
 
 ## 2. Convention Plugins (build-logic)
 
-Pour éviter la duplication de configuration dans les fichiers `build.gradle.kts`, nous utilisons des **Convention Plugins** situés dans le dossier `build-logic`.
+Nous centralisons la configuration Gradle dans `build-logic` pour éviter la duplication.
 
 ### Plugins disponibles :
-- `androidstarter.android.application` : Pour les modules d'application.
-- `androidstarter.android.library` : Pour les modules de bibliothèque Android.
-- `androidstarter.android.library.compose` : Pour les bibliothèques utilisant Jetpack Compose.
-- `androidstarter.android.application.compose` : Pour l'application utilisant Jetpack Compose.
-
-### Comment créer un nouveau module :
-1. Créez un nouveau dossier de module (ex: `:feature:home`).
-2. Ajoutez-le dans `settings.gradle.kts`.
-3. Dans son `build.gradle.kts`, appliquez le plugin souhaité :
-```kotlin
-plugins {
-    id("androidstarter.android.library.compose")
-}
-```
+- `androidstarter.android.application`
+- `androidstarter.android.library`
+- `androidstarter.android.library.compose`
+- `androidstarter.android.application.compose`
 
 ---
 
 ## 3. Bénéfices
-- **Compilation incrémentale** : Gradle ne recompile que les modules modifiés.
-- **Isolation** : Impossible d'accéder à la base de données (`:data`) depuis le `:designsystem` par erreur.
-- **Réutilisabilité** : Le module `:designsystem` peut être partagé entre plusieurs applications.
+- **Compilation incrémentale** : Seuls les modules impactés sont recompilés.
+- **Frontières claires** : Impossible d'appeler accidentellement des composants internes d'autres couches.
+- **Tests isolés** : Chaque module possède sa propre suite de tests dédiée.

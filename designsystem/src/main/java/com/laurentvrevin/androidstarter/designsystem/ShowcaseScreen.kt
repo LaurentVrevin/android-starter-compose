@@ -15,7 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.laurentvrevin.androidstarter.core.ui.SnackbarType
+import com.laurentvrevin.androidstarter.designsystem.ui.SnackbarType
 import com.laurentvrevin.androidstarter.designsystem.components.button.*
 import com.laurentvrevin.androidstarter.designsystem.components.card.AppCard
 import com.laurentvrevin.androidstarter.designsystem.components.chip.AppChip
@@ -34,7 +34,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun ShowcaseScreen(
     isDarkTheme: Boolean,
-    onThemeToggle: () -> Unit
+    onThemeToggle: () -> Unit,
+    onNavigateToSample: () -> Unit = {}
 ) {
     val spacing = AppTheme.spacing
     val colors = AppTheme.colors
@@ -189,6 +190,14 @@ fun ShowcaseScreen(
             }
 
             // SECTION: UI STATE & FEEDBACK
+            SectionBlock(title = "Navigation & Samples") {
+                AppPrimaryButton(
+                    text = "Go to Sample Feature",
+                    onClick = onNavigateToSample,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
             SectionBlock(title = "UI State & Feedback") {
                 var showGlobalLoader by remember { mutableStateOf(false) }
 

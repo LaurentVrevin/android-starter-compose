@@ -22,4 +22,7 @@ interface BaseDao<T> {
 
     @Upsert
     suspend fun upsert(obj: T)
+
+    @Upsert
+    suspend fun upsert(list: List<T>)
 }

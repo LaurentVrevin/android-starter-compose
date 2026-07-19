@@ -1,9 +1,11 @@
 package com.laurentvrevin.androidstarter
 
 import android.app.Application
-import com.laurentvrevin.androidstarter.core.di.uiModule
 import com.laurentvrevin.androidstarter.data.di.dataModule
 import com.laurentvrevin.androidstarter.data.di.networkModule
+import com.laurentvrevin.androidstarter.designsystem.di.designSystemModule
+import com.laurentvrevin.androidstarter.di.appModule
+import com.laurentvrevin.androidstarter.feature.sample.di.sampleModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -15,7 +17,7 @@ class App : Application() {
         startKoin {
             androidLogger()
             androidContext(this@App)
-            modules(networkModule, dataModule, uiModule)
+            modules(networkModule, dataModule, designSystemModule, sampleModule, appModule)
         }
     }
 }

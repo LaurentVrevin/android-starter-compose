@@ -1,47 +1,48 @@
-# UI State & Feedback Management
+# UI State & Feedback
 
-Cette section explique comment gérer les états de vos écrans et les feedbacks utilisateur.
+La gestion des états de l'interface utilisateur est cruciale pour une application réactive et robuste.
 
 ---
 
-## 1. Gestion des États (`UiState`)
+## 1. Gestion de l'état (UiState)
 
-Chaque écran doit être piloté par une [`UiState`](../core/src/main/java/com/laurentvrevin/androidstarter/core/ui/UiState.kt).
+Chaque écran doit être piloté par une data class spécifique à la feature (par exemple `SampleUiState`), contenant des propriétés immutables.
 
 ```kotlin
-sealed interface UiState<out T> {
-    data object Idle : UiState<Nothing>
-    data object Loading : UiState<Nothing>
-    data class Success<out T>(val data: T) : UiState<T>
-    data class Error(val message: String) : UiState<Nothing>
-}
+@Immutable
+data class SampleUiState(
+    val items: List<SampleItem> = emptyList(),
+    val isLoading: Boolean = false,
+    val isRefreshing: Boolean = false,
+    val error: UiText? = null
+)
 ```
 
 ### Pattern recommandé
-Dans le ViewModel, utilisez un `StateFlow` pour exposer l'état.
+
+1.  **ViewModel** : Gère la logique et expose un `StateFlow<SampleUiState>`.
+2.  **Screen** : Consomme l'état avec `collectAsStateWithLifecycle()`.
+
+```kotlin
+val state by viewModel.state.collectAsStateWithLifecycle()
+```
 
 ---
 
 ## 2. Événements "One-shot" (`UiEvent`)
 
-Pour les actions éphémères (Snackbar, Navigation), on utilise [`UiEvent`](../core/src/main/java/com/laurentvrevin/androidstarter/core/ui/UiEvent.kt) diffusés via le **`FeedbackManager`**.
+Pour les actions éphémères (Snackbar, Navigation), on utilise soit :
+- Des propriétés dans le State (ex: `val message: UiText?`) remises à null après affichage.
+- Le `FeedbackManager` pour des événements réellement globaux.
 
-### Envoyer un événement
-```kotlin
-feedbackManager.showSnackbar("Enregistré avec succès !", SnackbarType.Success)
-```
-
----
-
-## 3. Composants visuels de Feedback
-
-Tous ces composants sont dans le module `:designsystem`.
-
-- **`LoadingOverlay`** : Overlay plein écran bloquant les interactions.
-- **`AppSnackbar`** : Snackbar personnalisée supportant les types `Success`, `Error`, `Warning`.
-- **`EmptyState`** : Composant de remplacement quand une liste est vide.
+### UiText
+Utilisez [`UiText`](../designsystem/src/main/java/com/laurentvrevin/androidstarter/designsystem/ui/UiText.kt) pour passer des chaînes de caractères (ressources ou brutes) de la couche logique à l'UI sans dépendre du Context Android.
 
 ---
 
-> [!TIP]
-> Consultez l'écran de Showcase pour voir ces composants en action et comprendre comment les déclencher.
+## 3. Feedback visuel
+
+Le Design System fournit des composants prêts à l'emploi :
+- `LoadingOverlay` : Pour les chargements bloquants.
+- `EmptyState` : Pour les listes vides.
+- `AppSnackbar` : Pour les notifications rapides.

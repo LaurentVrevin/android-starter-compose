@@ -2,7 +2,9 @@ package com.laurentvrevin.androidstarter.data.di
 
 import androidx.room.Room
 import com.laurentvrevin.androidstarter.data.local.AppDatabase
-import com.laurentvrevin.androidstarter.data.local.PreferenceManager
+import com.laurentvrevin.androidstarter.data.local.AppPreferences
+import com.laurentvrevin.androidstarter.data.repository.SampleRepository
+import com.laurentvrevin.androidstarter.data.repository.SampleRepositoryImpl
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -13,13 +15,16 @@ val dataModule = module {
         Room.databaseBuilder(
             androidContext(),
             AppDatabase::class.java,
-            "app_database"
+            "android_starter_db"
         ).build()
     }
 
     // DataStore
-    single { PreferenceManager(androidContext()) }
+    single { AppPreferences(androidContext()) }
 
     // DAOs
-    single { get<AppDatabase>().userDao() }
+    single { get<AppDatabase>().sampleDao() }
+
+    // Repositories
+    single<SampleRepository> { SampleRepositoryImpl(get(), get()) }
 }

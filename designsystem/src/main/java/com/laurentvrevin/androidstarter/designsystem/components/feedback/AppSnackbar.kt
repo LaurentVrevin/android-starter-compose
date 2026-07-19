@@ -5,7 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.laurentvrevin.androidstarter.core.ui.SnackbarType
+import com.laurentvrevin.androidstarter.designsystem.ui.SnackbarType
 import com.laurentvrevin.androidstarter.designsystem.theme.AppTheme
 
 @Composable

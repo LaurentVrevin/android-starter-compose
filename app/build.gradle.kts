@@ -1,6 +1,7 @@
 plugins {
     id("androidstarter.android.application.compose")
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -28,6 +29,7 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":data"))
     implementation(project(":designsystem"))
+    implementation(project(":feature:sample"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)

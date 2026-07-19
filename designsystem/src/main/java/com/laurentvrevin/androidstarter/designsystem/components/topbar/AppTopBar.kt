@@ -2,10 +2,16 @@ package com.laurentvrevin.androidstarter.designsystem.components.topbar
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.style.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.laurentvrevin.androidstarter.designsystem.styles.*
 import com.laurentvrevin.androidstarter.designsystem.theme.AppTheme
 
@@ -14,6 +20,7 @@ import com.laurentvrevin.androidstarter.designsystem.theme.AppTheme
 fun AppTopBar(
     title: String,
     modifier: Modifier = Modifier,
+    onBackClick: (() -> Unit)? = null,
     style: Style? = null
 ) {
     val topBarStyle = style ?: AppTheme.topBarStyles.default()
@@ -21,10 +28,20 @@ fun AppTopBar(
 
     Row(
         modifier = modifier.styleable(style = topBarStyle),
+        verticalAlignment = Alignment.CenterVertically
     ) {
+        if (onBackClick != null) {
+            IconButton(onClick = onBackClick) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back"
+                )
+            }
+        }
         Text(
             text = title,
-            style = typography.titleLarge
+            style = typography.titleLarge,
+            modifier = Modifier.padding(start = if (onBackClick == null) AppTheme.spacing.extraSmall else 0.dp)
         )
     }
 }

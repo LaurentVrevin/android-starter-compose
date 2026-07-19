@@ -48,7 +48,48 @@ Pour changer l'apparence de TOUS les boutons de l'application, il suffit de modi
 
 ---
 
-## 3. Composants de Feedback
+## 3. Utilisation dans un écran ou un composant
+
+### Pour un composant personnalisé
+Si vous créez un nouveau composant, utilisez les **Tokens** via `AppTheme` pour garantir la cohérence :
+
+```kotlin
+@Composable
+fun MyCustomComponent(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .background(AppTheme.colors.primaryContainer)
+            .padding(AppTheme.spacing.standard)
+            .clip(AppTheme.shapes.medium)
+    ) {
+        Text("Contenu", style = AppTheme.typography.bodyLarge)
+    }
+}
+```
+
+### Pour un écran complet
+Utilisez `AppTheme` comme wrapper racine dans votre `Activity` ou votre `Preview`. Pour la mise en page, privilégiez `AppTheme.spacing` pour les marges.
+
+```kotlin
+@Composable
+fun MyScreen() {
+    Scaffold(
+        topBar = { AppTopBar(title = "Mon Écran") }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .padding(AppTheme.spacing.standard)
+        ) {
+            AppPrimaryButton(text = "Action", onClick = {})
+        }
+    }
+}
+```
+
+---
+
+## 4. Composants de Feedback
 
 ### Snackbars (`AppSnackbar`)
 Gérées via le `FeedbackManager`. Supporte :

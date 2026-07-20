@@ -8,6 +8,5 @@ import com.laurentvrevin.androidstarter.feature.template.domain.TemplateItem
 data class TemplateUiState(
     val items: List<TemplateItem> = emptyList(),
     val isInitialLoading: Boolean = true,
-    val isRefreshing: Boolean = false,
     val error: UiText? = null,
 )

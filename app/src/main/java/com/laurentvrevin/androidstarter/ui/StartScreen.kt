@@ -5,7 +5,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import com.laurentvrevin.androidstarter.R
 import com.laurentvrevin.androidstarter.designsystem.components.button.AppPrimaryButton
 import com.laurentvrevin.androidstarter.designsystem.components.button.AppSecondaryButton
 import com.laurentvrevin.androidstarter.designsystem.theme.AppTheme
@@ -28,7 +30,7 @@ fun StartScreen(
             verticalArrangement = Arrangement.Center,
         ) {
             Text(
-                text = "Welcome to AndroidStarter 🚀",
+                text = stringResource(R.string.start_welcome),
                 style = AppTheme.typography.display,
                 textAlign = TextAlign.Center,
             )
@@ -36,7 +38,7 @@ fun StartScreen(
             Spacer(modifier = Modifier.height(AppTheme.spacing.large))
 
             Text(
-                text = "This boilerplate is ready to use. Explore the features below to see what's included.",
+                text = stringResource(R.string.start_description),
                 style = AppTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
                 color = AppTheme.colors.onSurfaceVariant,
@@ -45,7 +47,7 @@ fun StartScreen(
             Spacer(modifier = Modifier.height(AppTheme.spacing.tripleLarge))
 
             AppPrimaryButton(
-                text = "Template Feature (Room + MVVM)",
+                text = stringResource(R.string.start_btn_template),
                 onClick = onNavigateToTemplate,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -53,7 +55,7 @@ fun StartScreen(
             Spacer(modifier = Modifier.height(AppTheme.spacing.standard))
 
             AppSecondaryButton(
-                text = "Design System Showcase",
+                text = stringResource(R.string.start_btn_showcase),
                 onClick = onNavigateToShowcase,
                 modifier = Modifier.fillMaxWidth(),
             )

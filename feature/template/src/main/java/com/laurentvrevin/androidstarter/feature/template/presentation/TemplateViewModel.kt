@@ -2,6 +2,7 @@ package com.laurentvrevin.androidstarter.feature.template.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.laurentvrevin.androidstarter.designsystem.ui.UiText
 import com.laurentvrevin.androidstarter.feature.template.domain.TemplateRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -19,7 +20,15 @@ class TemplateViewModel(
     private fun observeTemplates() {
         repository.getTemplates()
             .onEach { items ->
-                _state.update { it.copy(items = items, isInitialLoading = false, isRefreshing = false) }
+                _state.update { it.copy(items = items, isInitialLoading = false) }
+            }
+            .catch { e ->
+                _state.update {
+                    it.copy(
+                        isInitialLoading = false,
+                        error = UiText.DynamicString(e.message ?: "Unknown Error"),
+                    )
+                }
             }
             .launchIn(viewModelScope)
     }

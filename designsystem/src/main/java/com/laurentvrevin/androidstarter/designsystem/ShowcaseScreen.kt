@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.laurentvrevin.androidstarter.designsystem.components.button.*
@@ -49,7 +50,7 @@ fun ShowcaseScreen(
     Scaffold(
         topBar = {
             AppTopBar(
-                title = "Design System Showcase",
+                title = stringResource(R.string.showcase_title),
                 onBackClick = onBackClick,
             )
         },
@@ -76,8 +77,17 @@ fun ShowcaseScreen(
                     .padding(spacing.standard),
             verticalArrangement = Arrangement.spacedBy(spacing.doubleLarge),
         ) {
+            // SECTION: NAVIGATION
+            SectionBlock(title = stringResource(R.string.showcase_section_nav)) {
+                AppPrimaryButton(
+                    text = stringResource(R.string.showcase_nav_template),
+                    onClick = onNavigateToTemplate,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+
             // SECTION: TYPOGRAPHY
-            SectionBlock(title = "Typography") {
+            SectionBlock(title = stringResource(R.string.showcase_section_typography)) {
                 Text("Display Large", style = typography.display)
                 Text("Headline 1", style = typography.h1)
                 Text("Headline 2", style = typography.h2)
@@ -88,7 +98,7 @@ fun ShowcaseScreen(
             }
 
             // SECTION: COLORS
-            SectionBlock(title = "Core Colors") {
+            SectionBlock(title = stringResource(R.string.showcase_section_colors)) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(spacing.small)) {
                     ColorBox("Primary", colors.primary, colors.onPrimary, Modifier.weight(1f))
                     ColorBox("Secondary", colors.secondary, colors.onSecondary, Modifier.weight(1f))
@@ -102,13 +112,33 @@ fun ShowcaseScreen(
             }
 
             // SECTION: FOUNDATIONS
-            SectionBlock(title = "Foundations") {
+            SectionBlock(title = stringResource(R.string.showcase_section_foundations)) {
                 Text("Shapes", style = typography.titleLarge)
                 Row(horizontalArrangement = Arrangement.spacedBy(spacing.small)) {
-                    Box(Modifier.size(60.dp).clip(shapes.small).background(colors.primaryContainer))
-                    Box(Modifier.size(60.dp).clip(shapes.medium).background(colors.primaryContainer))
-                    Box(Modifier.size(60.dp).clip(shapes.large).background(colors.primaryContainer))
-                    Box(Modifier.size(60.dp).clip(shapes.pill).background(colors.primaryContainer))
+                    Box(
+                        Modifier
+                            .size(60.dp)
+                            .clip(shapes.small)
+                            .background(colors.primaryContainer),
+                    )
+                    Box(
+                        Modifier
+                            .size(60.dp)
+                            .clip(shapes.medium)
+                            .background(colors.primaryContainer),
+                    )
+                    Box(
+                        Modifier
+                            .size(60.dp)
+                            .clip(shapes.large)
+                            .background(colors.primaryContainer),
+                    )
+                    Box(
+                        Modifier
+                            .size(60.dp)
+                            .clip(shapes.pill)
+                            .background(colors.primaryContainer),
+                    )
                 }
 
                 Spacer(Modifier.height(spacing.small))
@@ -123,7 +153,7 @@ fun ShowcaseScreen(
             }
 
             // SECTION: BUTTONS
-            SectionBlock(title = "Buttons") {
+            SectionBlock(title = stringResource(R.string.showcase_section_buttons)) {
                 Text("Variantes (Medium)", style = typography.bodySmall)
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(spacing.small),
@@ -148,7 +178,7 @@ fun ShowcaseScreen(
             }
 
             // SECTION: CHIPS
-            SectionBlock(title = "Chips") {
+            SectionBlock(title = stringResource(R.string.showcase_section_chips)) {
                 Row(horizontalArrangement = Arrangement.spacedBy(spacing.small)) {
                     AppChip("Small", size = AppSize.Small)
                     AppChip("Medium", size = AppSize.Medium)
@@ -157,7 +187,7 @@ fun ShowcaseScreen(
             }
 
             // SECTION: INPUTS
-            SectionBlock(title = "Inputs") {
+            SectionBlock(title = stringResource(R.string.showcase_section_inputs)) {
                 var text by remember { mutableStateOf("") }
                 AppInput(
                     value = text,
@@ -176,7 +206,7 @@ fun ShowcaseScreen(
             }
 
             // SECTION: CARDS
-            SectionBlock(title = "Cards") {
+            SectionBlock(title = stringResource(R.string.showcase_section_cards)) {
                 AppCard(modifier = Modifier.fillMaxWidth()) {
                     Text("Default Card with Shadow Level 1", style = typography.bodyLarge)
                 }
@@ -195,41 +225,46 @@ fun ShowcaseScreen(
             }
 
             // SECTION: UI STATE & FEEDBACK
-            SectionBlock(title = "Navigation & Templates") {
-                AppPrimaryButton(
-                    text = "Go to Template Feature",
-                    onClick = onNavigateToTemplate,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-
-            SectionBlock(title = "UI State & Feedback") {
+            SectionBlock(title = stringResource(R.string.showcase_section_feedback)) {
                 var showGlobalLoader by remember { mutableStateOf(false) }
 
                 Text("Snackbars", style = typography.titleLarge)
                 Row(horizontalArrangement = Arrangement.spacedBy(spacing.small)) {
-                    AppPrimaryButton("Default", onClick = {
-                        scope.launch {
-                            currentSnackbarType = SnackbarType.Default
-                            snackbarHostState.showSnackbar("This is a default message")
-                        }
-                    }, size = AppSize.Small)
+                    AppPrimaryButton(
+                        "Default",
+                        onClick = {
+                            scope.launch {
+                                currentSnackbarType = SnackbarType.Default
+                                snackbarHostState.showSnackbar("This is a default message")
+                            }
+                        },
+                        size = AppSize.Small,
+                    )
 
-                    AppPrimaryButton("Success", onClick = {
-                        scope.launch {
-                            currentSnackbarType = SnackbarType.Success
-                            snackbarHostState.showSnackbar("Operation successful!")
-                        }
-                    }, size = AppSize.Small)
+                    AppPrimaryButton(
+                        "Success",
+                        onClick = {
+                            scope.launch {
+                                currentSnackbarType = SnackbarType.Success
+                                snackbarHostState.showSnackbar("Operation successful!")
+                            }
+                        },
+                        size = AppSize.Small,
+                    )
 
-                    AppDangerButton("Error", onClick = {
-                        scope.launch {
-                            currentSnackbarType = SnackbarType.Error
-                            snackbarHostState.showSnackbar("An error occurred")
-                        }
-                    }, size = AppSize.Small)
+                    AppDangerButton(
+                        "Error",
+                        onClick = {
+                            scope.launch {
+                                currentSnackbarType = SnackbarType.Error
+                                snackbarHostState.showSnackbar("An error occurred")
+                            }
+                        },
+                        size = AppSize.Small,
+                    )
                 }
 
+                // ... rest of the screen stays same (internal dev tools)
                 Spacer(Modifier.height(spacing.small))
                 Text("Loading States", style = typography.titleLarge)
                 AppSecondaryButton("Trigger Fullscreen Loader (2s)", onClick = {

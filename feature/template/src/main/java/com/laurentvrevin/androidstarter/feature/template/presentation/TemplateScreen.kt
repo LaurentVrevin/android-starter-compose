@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.laurentvrevin.androidstarter.designsystem.components.button.AppPrimaryButton
@@ -19,6 +20,7 @@ import com.laurentvrevin.androidstarter.designsystem.components.feedback.EmptySt
 import com.laurentvrevin.androidstarter.designsystem.components.feedback.LoadingOverlay
 import com.laurentvrevin.androidstarter.designsystem.components.topbar.AppTopBar
 import com.laurentvrevin.androidstarter.designsystem.theme.AppTheme
+import com.laurentvrevin.androidstarter.feature.template.R
 import com.laurentvrevin.androidstarter.feature.template.domain.TemplateItem
 import org.koin.androidx.compose.koinViewModel
 
@@ -28,19 +30,21 @@ fun TemplateScreen(
     viewModel: TemplateViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val newTitle = stringResource(R.string.template_item_title_new)
+    val newDesc = stringResource(R.string.template_item_desc_new)
 
     Scaffold(
         topBar = {
             AppTopBar(
-                title = "Boilerplate Template",
+                title = stringResource(R.string.template_title),
                 onBackClick = onBack,
             )
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                viewModel.addTemplate("New Item", "Generated at ${System.currentTimeMillis()}")
+                viewModel.addTemplate(newTitle, newDesc)
             }) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.template_action_add))
             }
         },
     ) { innerPadding ->
@@ -51,12 +55,15 @@ fun TemplateScreen(
                     .fillMaxSize(),
         ) {
             if (state.items.isEmpty() && !state.isInitialLoading) {
+                val itemTitle = stringResource(R.string.template_item_title_1)
+                val itemDesc = stringResource(R.string.template_item_desc_1)
                 EmptyState(
-                    message = "No data available in local Room database.",
+                    message = stringResource(R.string.template_empty_msg),
                     action = {
-                        AppPrimaryButton("Add Sample Data", onClick = {
-                            viewModel.addTemplate("First Item", "This is stored in Room.")
-                        })
+                        AppPrimaryButton(
+                            text = stringResource(R.string.template_btn_add_template),
+                            onClick = { viewModel.addTemplate(itemTitle, itemDesc) },
+                        )
                     },
                 )
             } else {
@@ -71,6 +78,19 @@ fun TemplateScreen(
                             onDelete = { viewModel.deleteTemplate(item.id) },
                         )
                     }
+                }
+            }
+
+            state.error?.let { error ->
+                Snackbar(
+                    modifier = Modifier.align(Alignment.BottomCenter).padding(16.dp),
+                    action = {
+                        TextButton(onClick = { /* Refresh could be triggered here */ }) {
+                            Text(stringResource(R.string.template_action_retry))
+                        }
+                    },
+                ) {
+                    Text(error.asString())
                 }
             }
 
@@ -95,7 +115,11 @@ private fun TemplateItemCard(
                 Text(item.description, style = AppTheme.typography.bodyLarge)
             }
             IconButton(onClick = onDelete) {
-                Icon(Icons.Default.Delete, contentDescription = "Delete", tint = AppTheme.colors.error)
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = stringResource(R.string.template_action_delete),
+                    tint = AppTheme.colors.error,
+                )
             }
         }
     }

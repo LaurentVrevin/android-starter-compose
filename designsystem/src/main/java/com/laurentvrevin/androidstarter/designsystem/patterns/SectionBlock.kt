@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.laurentvrevin.androidstarter.designsystem.patterns
 
 import androidx.compose.foundation.layout.*
@@ -6,31 +8,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.laurentvrevin.androidstarter.designsystem.theme.AppTheme
 
-/**
- * Un bloc de section avec un titre optionnel.
- * Utile pour séparer les contenus dans un écran long.
- */
 @Composable
 fun SectionBlock(
-    modifier: Modifier = Modifier,
-    title: String? = null,
-    content: @Composable ColumnScope.() -> Unit,
+    title: String,
+    content: @Composable () -> Unit,
 ) {
     val spacing = AppTheme.spacing
     val typography = AppTheme.typography
 
-    Column(modifier = modifier.fillMaxWidth()) {
-        if (title != null) {
-            Text(
-                text = title,
-                style = typography.titleLarge,
-            )
-            Spacer(Modifier.height(spacing.medium))
-        }
-
-        Column(
-            verticalArrangement = Arrangement.spacedBy(spacing.small),
-            content = content,
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = title,
+            style = typography.labelMedium,
+            color = AppTheme.colors.primary,
         )
+        Spacer(modifier = Modifier.height(spacing.small))
+        content()
     }
 }

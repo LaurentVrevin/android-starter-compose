@@ -1,14 +1,39 @@
 package com.laurentvrevin.androidstarter.designsystem.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import com.laurentvrevin.androidstarter.designsystem.foundation.*
-import com.laurentvrevin.androidstarter.designsystem.styles.*
+import androidx.compose.runtime.ReadOnlyComposable
+import com.laurentvrevin.androidstarter.designsystem.foundation.AppBorders
+import com.laurentvrevin.androidstarter.designsystem.foundation.AppDimensions
+import com.laurentvrevin.androidstarter.designsystem.foundation.AppElevation
+import com.laurentvrevin.androidstarter.designsystem.foundation.AppShapes
+import com.laurentvrevin.androidstarter.designsystem.foundation.AppSpacing
+import com.laurentvrevin.androidstarter.designsystem.foundation.LocalAppBorders
+import com.laurentvrevin.androidstarter.designsystem.foundation.LocalAppDimensions
+import com.laurentvrevin.androidstarter.designsystem.foundation.LocalAppElevation
+import com.laurentvrevin.androidstarter.designsystem.foundation.LocalAppShapes
+import com.laurentvrevin.androidstarter.designsystem.foundation.LocalAppSpacing
+import com.laurentvrevin.androidstarter.designsystem.styles.ButtonStyles
+import com.laurentvrevin.androidstarter.designsystem.styles.CardStyles
+import com.laurentvrevin.androidstarter.designsystem.styles.ChipStyles
+import com.laurentvrevin.androidstarter.designsystem.styles.DefaultButtonStyles
+import com.laurentvrevin.androidstarter.designsystem.styles.DefaultCardStyles
+import com.laurentvrevin.androidstarter.designsystem.styles.DefaultChipStyles
+import com.laurentvrevin.androidstarter.designsystem.styles.DefaultInputStyles
+import com.laurentvrevin.androidstarter.designsystem.styles.DefaultTopBarStyles
+import com.laurentvrevin.androidstarter.designsystem.styles.InputStyles
+import com.laurentvrevin.androidstarter.designsystem.styles.LocalButtonStyles
+import com.laurentvrevin.androidstarter.designsystem.styles.LocalCardStyles
+import com.laurentvrevin.androidstarter.designsystem.styles.LocalChipStyles
+import com.laurentvrevin.androidstarter.designsystem.styles.LocalInputStyles
+import com.laurentvrevin.androidstarter.designsystem.styles.LocalTopBarStyles
+import com.laurentvrevin.androidstarter.designsystem.styles.TopBarStyles
 
 @Composable
 fun AppTheme(
@@ -81,4 +106,69 @@ fun AppTheme(
             content = content,
         )
     }
+}
+
+/**
+ * Objet d'accès centralisé aux jetons (tokens) et styles du Design System.
+ */
+object AppTheme {
+    val spacing: AppSpacing
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalAppSpacing.current
+
+    val shapes: AppShapes
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalAppShapes.current
+
+    val elevation: AppElevation
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalAppElevation.current
+
+    val borders: AppBorders
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalAppBorders.current
+
+    val dimensions: AppDimensions
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalAppDimensions.current
+
+    val typography: AppTypography
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalAppTypography.current
+
+    val buttonStyles: ButtonStyles
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalButtonStyles.current
+
+    val cardStyles: CardStyles
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalCardStyles.current
+
+    val chipStyles: ChipStyles
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalChipStyles.current
+
+    val inputStyles: InputStyles
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalInputStyles.current
+
+    val topBarStyles: TopBarStyles
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalTopBarStyles.current
+
+    val colors: ColorScheme
+        @Composable
+        @ReadOnlyComposable
+        get() = MaterialTheme.colorScheme
 }

@@ -1,7 +1,10 @@
 package com.laurentvrevin.androidstarter.designsystem.components.topbar
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.style.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.Style
+import androidx.compose.foundation.style.styleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -14,7 +17,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.laurentvrevin.androidstarter.designsystem.R
-import com.laurentvrevin.androidstarter.designsystem.styles.*
 import com.laurentvrevin.androidstarter.designsystem.theme.AppTheme
 
 @OptIn(ExperimentalFoundationStyleApi::class)

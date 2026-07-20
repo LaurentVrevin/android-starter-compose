@@ -26,7 +26,8 @@ fun LoadingOverlay(
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
-                        onClick = {}, // Bloquer les clics
+                        onClick = {},
+                        // Bloquer les clics
                     ),
             contentAlignment = Alignment.Center,
         ) {

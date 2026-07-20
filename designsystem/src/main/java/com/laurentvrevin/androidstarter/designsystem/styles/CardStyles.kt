@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.laurentvrevin.androidstarter.designsystem.styles
 
 import androidx.compose.foundation.style.*
@@ -6,7 +8,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import com.laurentvrevin.androidstarter.designsystem.foundation.AppPadding
+import com.laurentvrevin.androidstarter.designsystem.foundation.appPadding
 import com.laurentvrevin.androidstarter.designsystem.theme.AppTheme
 
 /**
@@ -40,7 +42,7 @@ class DefaultCardStyles : CardStyles {
                     offset = DpOffset(0.dp, 2.dp),
                 ),
             )
-            AppPadding(spacing)
+            appPadding(spacing)
         }
     }
 

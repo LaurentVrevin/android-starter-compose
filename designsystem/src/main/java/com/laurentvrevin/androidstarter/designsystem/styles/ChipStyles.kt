@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.laurentvrevin.androidstarter.designsystem.styles
 
 import androidx.compose.foundation.shape.CircleShape

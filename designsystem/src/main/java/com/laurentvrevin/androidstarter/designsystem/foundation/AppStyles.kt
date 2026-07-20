@@ -22,7 +22,7 @@ object AppStyles {
 /**
  * Extension pour appliquer un padding standard du Design System dans un Style.
  */
-fun StyleScope.AppPadding(
+fun StyleScope.appPadding(
     spacing: AppSpacing,
     all: Dp? = null,
 ) {
@@ -32,7 +32,7 @@ fun StyleScope.AppPadding(
 /**
  * Extension pour appliquer une bordure standard du Design System dans un Style.
  */
-fun StyleScope.AppBorder(
+fun StyleScope.appBorder(
     borders: AppBorders,
     width: Dp? = null,
     color: Color? = null,

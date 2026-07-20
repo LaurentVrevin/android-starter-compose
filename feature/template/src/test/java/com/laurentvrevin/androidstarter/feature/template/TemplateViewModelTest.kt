@@ -69,12 +69,12 @@ class TemplateViewModelTest {
 }
 
 class FakeTemplateRepository : TemplateRepository {
-    private val _templates = MutableStateFlow<List<TemplateItem>>(emptyList())
+    private val templatesFlow = MutableStateFlow<List<TemplateItem>>(emptyList())
     var addCalls = 0
     var deleteCalls = 0
     var lastDeletedId = -1
 
-    override fun getTemplates(): Flow<List<TemplateItem>> = _templates
+    override fun getTemplates(): Flow<List<TemplateItem>> = templatesFlow
 
     override suspend fun addTemplate(
         title: String,
@@ -89,6 +89,6 @@ class FakeTemplateRepository : TemplateRepository {
     }
 
     fun emit(items: List<TemplateItem>) {
-        _templates.value = items
+        templatesFlow.value = items
     }
 }

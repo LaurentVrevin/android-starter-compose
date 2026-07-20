@@ -1,6 +1,7 @@
 package com.laurentvrevin.androidstarter.data.local.database.template
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Query
 import com.laurentvrevin.androidstarter.data.local.dao.BaseDao
 import kotlinx.coroutines.flow.Flow
 

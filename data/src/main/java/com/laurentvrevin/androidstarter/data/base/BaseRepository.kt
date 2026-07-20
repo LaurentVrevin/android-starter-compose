@@ -2,8 +2,10 @@ package com.laurentvrevin.androidstarter.data.base
 
 import com.laurentvrevin.androidstarter.data.network.NetworkError
 import com.laurentvrevin.androidstarter.data.network.NetworkResult
-import io.ktor.client.plugins.*
-import io.ktor.utils.io.errors.*
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.RedirectResponseException
+import io.ktor.client.plugins.ServerResponseException
+import io.ktor.utils.io.errors.IOException
 import kotlinx.serialization.SerializationException
 import kotlin.coroutines.cancellation.CancellationException
 

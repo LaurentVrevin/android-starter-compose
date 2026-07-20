@@ -10,4 +10,5 @@
     <string name="showcase_section_inputs">Inputs</string>
     <string name="showcase_section_cards">Cards</string>
     <string name="showcase_section_feedback">UI State &amp; Feedback</string>
+    <string name="design_back">Back</string>
 </resources>

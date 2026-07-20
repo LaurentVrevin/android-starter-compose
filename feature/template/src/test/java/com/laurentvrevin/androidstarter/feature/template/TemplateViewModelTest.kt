@@ -43,10 +43,32 @@ class TemplateViewModelTest {
             assertEquals(items, state.items)
             assertEquals(false, state.isInitialLoading)
         }
+
+    @Test
+    fun `addTemplate calls repository`() =
+        runTest {
+            viewModel.addTemplate("New", "Desc")
+            advanceUntilIdle()
+
+            assertEquals(1, fakeRepository.addCalls)
+        }
+
+    @Test
+    fun `deleteTemplate calls repository`() =
+        runTest {
+            viewModel.deleteTemplate(123)
+            advanceUntilIdle()
+
+            assertEquals(1, fakeRepository.deleteCalls)
+            assertEquals(123, fakeRepository.lastDeletedId)
+        }
 }
 
 class FakeTemplateRepository : TemplateRepository {
     private val _templates = MutableStateFlow<List<TemplateItem>>(emptyList())
+    var addCalls = 0
+    var deleteCalls = 0
+    var lastDeletedId = -1
 
     override fun getTemplates(): Flow<List<TemplateItem>> = _templates
 
@@ -54,11 +76,12 @@ class FakeTemplateRepository : TemplateRepository {
         title: String,
         description: String,
     ) {
-        // No-op for simple state test
+        addCalls++
     }
 
     override suspend fun deleteTemplate(id: Int) {
-        // No-op for simple state test
+        deleteCalls++
+        lastDeletedId = id
     }
 
     fun emit(items: List<TemplateItem>) {

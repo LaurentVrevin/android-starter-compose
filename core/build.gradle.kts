@@ -8,7 +8,9 @@ android {
 }
 
 dependencies {
+    implementation(platform(libs.compose.bom))
     implementation(libs.androidx.core.ktx)
+    implementation(libs.compose.ui)
     implementation(libs.kotlinx.serialization.json)
 
     // Testing

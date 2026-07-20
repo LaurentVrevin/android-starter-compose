@@ -2,7 +2,7 @@ package com.laurentvrevin.androidstarter.feature.template.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.laurentvrevin.androidstarter.designsystem.ui.UiText
+import com.laurentvrevin.androidstarter.core.ui.UiText
 import com.laurentvrevin.androidstarter.feature.template.domain.TemplateRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch

@@ -1,4 +1,4 @@
-package com.laurentvrevin.androidstarter.designsystem.ui
+package com.laurentvrevin.androidstarter.core.ui
 
 import android.content.Context
 import androidx.annotation.StringRes

@@ -30,6 +30,7 @@ app/build/
 *.ap_
 *.dex
 *.class
+.bootstrap-complete
 
 # Logcat
 *.log

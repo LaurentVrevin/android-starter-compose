@@ -1,5 +1,5 @@
 plugins {
-    id("androidstarter.android.library.compose")
+    id("com.laurentvrevin.android.library.compose")
     alias(libs.plugins.kotlin.serialization)
 }
 

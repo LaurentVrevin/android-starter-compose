@@ -7,19 +7,19 @@ group = "com.laurentvrevin.androidstarter.buildlogic"
 gradlePlugin {
     plugins {
         register("androidApplication") {
-            id = "androidstarter.android.application"
+            id = "com.laurentvrevin.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
         register("androidLibrary") {
-            id = "androidstarter.android.library"
+            id = "com.laurentvrevin.android.library"
             implementationClass = "AndroidLibraryConventionPlugin"
         }
         register("androidLibraryCompose") {
-            id = "androidstarter.android.library.compose"
+            id = "com.laurentvrevin.android.library.compose"
             implementationClass = "AndroidLibraryComposeConventionPlugin"
         }
         register("androidApplicationCompose") {
-            id = "androidstarter.android.application.compose"
+            id = "com.laurentvrevin.android.application.compose"
             implementationClass = "AndroidApplicationComposeConventionPlugin"
         }
     }

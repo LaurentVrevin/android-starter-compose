@@ -66,8 +66,9 @@ class BootstrapLogicTest {
     @Test(expected = IllegalStateException::class)
     fun `checkConflicts detects non-empty destination`() {
         val root = tempFolder.root
-        val srcDir = File(root, "src/main/java").apply { mkdirs() }
+        val srcDir = File(root, "app/src/main/java").apply { mkdirs() }
         File(srcDir, "com/old/app").apply { mkdirs() }
+        
         val targetDir = File(srcDir, "com/new/app").apply { mkdirs() }
         File(targetDir, "Existing.kt").writeText("data")
         
@@ -88,19 +89,31 @@ class BootstrapLogicTest {
     }
 
     @Test
-    fun `movePackageDirectories moves files and verifies result`() {
+    fun `movePackageDirectories works in multi-module paths`() {
         val root = tempFolder.root
-        val srcDir = File(root, "src/main/java").apply { mkdirs() }
-        val oldDir = File(srcDir, "com/old/app").apply { mkdirs() }
-        val ktFile = File(oldDir, "MainActivity.kt").apply { writeText("content") }
+        val appSrc = File(root, "app/src/main/java").apply { mkdirs() }
+        val coreSrc = File(root, "core/src/main/kotlin").apply { mkdirs() }
+        
+        val oldAppDir = File(appSrc, "com/old/app").apply { mkdirs() }
+        File(oldAppDir, "App.kt").writeText("content")
+        
+        val oldCoreDir = File(coreSrc, "com/old/app").apply { mkdirs() }
+        File(oldCoreDir, "Core.kt").writeText("content")
         
         val logic = BootstrapLogic(root)
         logic.movePackageDirectories("com.old.app", "com.new.app")
         
-        val newDir = File(srcDir, "com/new/app")
-        assertTrue("Target directory should exist", newDir.exists())
-        assertTrue("File should be moved", File(newDir, "MainActivity.kt").exists())
-        assertFalse("Old directory should be deleted", oldDir.exists())
+        val newAppDir = File(appSrc, "com/new/app")
+        val newCoreDir = File(coreSrc, "com/new/app")
+        
+        assertTrue("App target should exist", newAppDir.exists())
+        assertTrue("Core target should exist", newCoreDir.exists())
+        assertTrue(File(newAppDir, "App.kt").exists())
+        assertTrue(File(newCoreDir, "Core.kt").exists())
+        
+        assertFalse("Old App dir should be deleted", oldAppDir.exists())
+        assertFalse("Old Core dir should be deleted", oldCoreDir.exists())
+        assertFalse("Old middle dir 'old' should be deleted", File(appSrc, "com/old").exists())
     }
 
     @Test

@@ -33,8 +33,8 @@ abstract class BootstrapTask : DefaultTask() {
         val oldPackageName = starterProperties.getProperty("starter.packageName") ?: ""
         val oldThemeName = starterProperties.getProperty("starter.themeName") ?: ""
 
-        if (oldProjectName.isBlank() || oldDisplayName.isBlank() || oldPackageName.isBlank()) {
-            throw GradleException("Source properties in starter.properties cannot be empty.")
+        if (oldProjectName.isBlank() || oldDisplayName.isBlank() || oldPackageName.isBlank() || oldThemeName.isBlank()) {
+            throw GradleException("Mandatory source properties in starter.properties are missing or empty.")
         }
 
         val scanner = Scanner(System.`in`)
@@ -73,9 +73,8 @@ abstract class BootstrapTask : DefaultTask() {
         logic.validateProjectName(projectName)
         logic.validatePackageName(packageName, oldPackageName)
         
-        if (!dryRun) {
-            logic.checkConflicts(oldPackageName, packageName)
-        }
+        // Conflict detection (should run in dry-run too)
+        logic.checkConflicts(oldPackageName, packageName)
 
         val newThemeName = "Theme.$projectName"
 
@@ -115,8 +114,10 @@ abstract class BootstrapTask : DefaultTask() {
         logic.movePackageDirectories(oldPackageName, packageName)
 
         if (!dryRun) {
+            if (!starterPropertiesFile.delete()) {
+                throw GradleException("Failed to delete starter.properties. Please delete it manually and create .bootstrap-complete to finish.")
+            }
             completionFile.writeText("Bootstrapped on ${java.time.LocalDateTime.now()}\n")
-            starterPropertiesFile.delete()
             println("✅ Project successfully bootstrapped!")
         }
     }

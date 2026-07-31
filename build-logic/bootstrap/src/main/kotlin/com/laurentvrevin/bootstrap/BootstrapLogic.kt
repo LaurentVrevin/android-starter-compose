@@ -40,18 +40,18 @@ class BootstrapLogic(
 
     fun checkConflicts(oldPackage: String, newPackage: String) {
         val srcDirs = getSourceFolders()
-        val oldPath = oldPackage.replace(".", File.separator)
+        val oldPathSuffix = oldPackage.replace(".", File.separator)
         val newPath = newPackage.replace(".", File.separator)
 
         rootDir.walkTopDown()
             .onEnter { it.name !in setOf("build", "out", ".git", ".gradle") }
-            .filter { it.isDirectory && it.path.endsWith(oldPath) }
+            .filter { it.isDirectory && it.path.endsWith(oldPathSuffix) }
             .filter { dir -> isInsideSourceFolder(dir, srcDirs) }
             .forEach { dir ->
                 val rootSrcDir = findRootSrcDir(dir, srcDirs)
                 if (rootSrcDir != null) {
                     val targetDir = File(rootSrcDir, newPath)
-                    if (targetDir.exists() && targetDir.listFiles()?.isNotEmpty() == true) {
+                    if (targetDir.exists() && (targetDir.listFiles()?.isNotEmpty() == true)) {
                         throw IllegalStateException("Conflict detected: Destination directory already exists and is not empty: ${targetDir.relativeTo(rootDir)}")
                     }
                 }
@@ -104,12 +104,12 @@ class BootstrapLogic(
         newPackage: String,
     ) {
         val srcDirs = getSourceFolders()
-        val oldPath = oldPackage.replace(".", File.separator)
+        val oldPathSuffix = oldPackage.replace(".", File.separator)
         val newPath = newPackage.replace(".", File.separator)
 
         rootDir.walkTopDown()
             .onEnter { it.name !in setOf("build", "out", ".git", ".gradle") }
-            .filter { it.isDirectory && it.path.endsWith(oldPath) }
+            .filter { it.isDirectory && it.path.endsWith(oldPathSuffix) }
             .filter { dir -> isInsideSourceFolder(dir, srcDirs) }
             .toList()
             .forEach { dir ->
@@ -155,15 +155,17 @@ class BootstrapLogic(
     )
 
     private fun isInsideSourceFolder(dir: File, srcDirs: List<String>): Boolean {
-        val path = dir.path.replace(File.separator, "/")
-        return srcDirs.any { path.contains("/$it") || path.endsWith(it) }
+        val normalizedPath = dir.absolutePath.replace(File.separator, "/")
+        return srcDirs.any { marker -> normalizedPath.contains("/$marker/") || normalizedPath.endsWith("/$marker") }
     }
 
     private fun findRootSrcDir(dir: File, srcDirs: List<String>): File? {
         var current: File? = dir
         while (current != null && current != rootDir) {
-            val relative = current.relativeTo(rootDir).path.replace(File.separator, "/")
-            if (srcDirs.contains(relative)) return current
+            val relativePath = current.relativeTo(rootDir).path.replace(File.separator, "/")
+            if (srcDirs.contains(relativePath) || srcDirs.any { relativePath.endsWith("/$it") }) {
+                return current
+            }
             current = current.parentFile
         }
         return null

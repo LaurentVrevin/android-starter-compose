@@ -11,6 +11,10 @@ class BootstrapLogic(
         "yml", "yaml", "json", "pro", "gitignore", "editorconfig"
     )
 
+    private val excludedDirectories = setOf(
+        "build", "out", ".git", ".gradle", ".idea", ".artifacts", ".kotlin"
+    )
+
     fun validateProjectName(projectName: String) {
         if (projectName.isBlank()) {
             throw IllegalArgumentException("Project Name cannot be empty.")
@@ -43,8 +47,9 @@ class BootstrapLogic(
         val oldPathSuffix = oldPackage.replace(".", File.separator)
         val newPath = newPackage.replace(".", File.separator)
 
+        // Source directories conflicts
         rootDir.walkTopDown()
-            .onEnter { it.name !in setOf("build", "out", ".git", ".gradle") }
+            .onEnter { it.name !in excludedDirectories }
             .filter { it.isDirectory && it.path.endsWith(oldPathSuffix) }
             .filter { dir -> isInsideSourceFolder(dir, srcDirs) }
             .forEach { dir ->
@@ -56,22 +61,36 @@ class BootstrapLogic(
                     }
                 }
             }
+
+        // Room schema conflicts
+        rootDir.walkTopDown()
+            .onEnter { it.name !in excludedDirectories }
+            .filter { it.isDirectory && it.name == "schemas" }
+            .forEach { schemasDir ->
+                schemasDir.listFiles { f -> f.isDirectory }?.forEach { schemaDir ->
+                    if (schemaDir.name.contains(oldPackage)) {
+                        val newSchemaName = schemaDir.name.replace(oldPackage, newPackage)
+                        val targetDir = File(schemasDir, newSchemaName)
+                        if (targetDir.exists() && (targetDir.listFiles()?.isNotEmpty() == true)) {
+                            throw IllegalStateException("Conflict detected in Room schemas: ${targetDir.relativeTo(rootDir)} already exists.")
+                        }
+                    }
+                }
+            }
     }
 
     fun applyTransformations(
         stringTransformations: List<Pair<String, String>>,
         regexTransformations: List<Pair<Regex, String>> = emptyList()
     ) {
-        val excludedPaths = setOf(".git", ".gradle", ".idea", ".kotlin", "build", "out")
-
         rootDir.walkTopDown()
-            .onEnter { it.name !in excludedPaths }
+            .onEnter { it.name !in excludedDirectories }
             .filter { it.isFile && it.extension in allowedExtensions }
             .filter { it.name != "starter.properties" && it.name != "gradlew" && it.name != "gradlew.bat" }
             .forEach { file ->
                 var content = file.readText()
                 var modified = false
-                
+
                 // Regex transformations first
                 regexTransformations.forEach { (regex, replacement) ->
                     if (regex.containsMatchIn(content)) {
@@ -87,7 +106,7 @@ class BootstrapLogic(
                         modified = true
                     }
                 }
-                
+
                 if (modified) {
                     if (dryRun) {
                         println("   [DRY RUN] Would update: ${file.relativeTo(rootDir)}")
@@ -108,7 +127,7 @@ class BootstrapLogic(
         val newPath = newPackage.replace(".", File.separator)
 
         rootDir.walkTopDown()
-            .onEnter { it.name !in setOf("build", "out", ".git", ".gradle") }
+            .onEnter { it.name !in excludedDirectories }
             .filter { it.isDirectory && it.path.endsWith(oldPathSuffix) }
             .filter { dir -> isInsideSourceFolder(dir, srcDirs) }
             .toList()
@@ -124,7 +143,7 @@ class BootstrapLogic(
                                 throw IllegalStateException("Failed to create directory: ${targetDir.absolutePath}")
                             }
                         }
-                        
+
                         dir.listFiles()?.forEach { file ->
                             val destFile = File(targetDir, file.name)
                             if (destFile.exists()) {
@@ -140,12 +159,43 @@ class BootstrapLogic(
                                 println("   ⚠️  Warning: Could not delete empty directory: ${dir.absolutePath}")
                             }
                         }
-                        
+
                         cleanEmptyParents(dir.parentFile, rootSrcDir)
                         println("   Moved content from: ${dir.relativeTo(rootDir)} to ${targetDir.relativeTo(rootDir)}")
                     }
                 }
             }
+    }
+
+    fun renameRoomSchemas(oldPackage: String, newPackage: String) {
+        rootDir.walkTopDown()
+            .onEnter { it.name !in excludedDirectories }
+            .filter { it.isDirectory && it.name == "schemas" }
+            .forEach { schemasDir ->
+                schemasDir.listFiles { f -> f.isDirectory }?.forEach { schemaDir ->
+                    if (schemaDir.name.contains(oldPackage)) {
+                        val newSchemaName = schemaDir.name.replace(oldPackage, newPackage)
+                        val targetDir = File(schemasDir, newSchemaName)
+
+                        if (dryRun) {
+                            println("   [DRY RUN] Would rename Room schema directory: ${schemaDir.relativeTo(rootDir)} -> $newSchemaName")
+                        } else {
+                            if (!schemaDir.renameTo(targetDir)) {
+                                throw IllegalStateException("Failed to rename Room schema directory: ${schemaDir.absolutePath}")
+                            }
+                            println("   Renamed Room schema directory: ${targetDir.relativeTo(rootDir)}")
+                        }
+                    }
+                }
+            }
+    }
+
+    fun escapeXml(input: String): String {
+        return input.replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace("\"", "&quot;")
+            .replace("'", "&apos;")
     }
 
     private fun getSourceFolders() = listOf(

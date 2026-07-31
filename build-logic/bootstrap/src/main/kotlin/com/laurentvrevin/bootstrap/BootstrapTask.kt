@@ -41,19 +41,19 @@ abstract class BootstrapTask : DefaultTask() {
 
         var projectNameInput = project.findProperty("projectName")?.toString()
         if (projectNameInput == null) {
-            print("Enter Gradle Project Name (PascalCase, e.g. Wheris): ")
+            print("Enter Gradle Project Name (PascalCase, e.g. MonApplication): ")
             projectNameInput = scanner.nextLine()
         }
 
         var appDisplayNameInput = project.findProperty("appDisplayName")?.toString()
         if (appDisplayNameInput == null) {
-            print("Enter Application Display Name (e.g. Wheris App): ")
+            print("Enter Application Display Name (e.g. Mon application): ")
             appDisplayNameInput = scanner.nextLine()
         }
 
         var packageNameInput = project.findProperty("packageName")?.toString()
         if (packageNameInput == null) {
-            print("Enter Android Package Name (e.g. com.my.app): ")
+            print("Enter Android Package Name (e.g. com.exemple.monapplication): ")
             packageNameInput = scanner.nextLine()
         }
 
@@ -73,15 +73,16 @@ abstract class BootstrapTask : DefaultTask() {
         logic.validateProjectName(projectName)
         logic.validatePackageName(packageName, oldPackageName)
         
-        // Conflict detection (should run in dry-run too)
+        // Conflict detection (runs in dry-run too)
         logic.checkConflicts(oldPackageName, packageName)
 
         val newThemeName = "Theme.$projectName"
+        val escapedAppDisplayName = logic.escapeXml(appDisplayName)
 
         println("\n🚀 Bootstrapping project...")
         println("   Target Directory: ${rootDir.absolutePath}")
         println("   Project Name: $oldProjectName -> $projectName")
-        println("   Display Name: $oldDisplayName -> $appDisplayName")
+        println("   Display Name: $oldDisplayName -> $appDisplayName (XML: $escapedAppDisplayName)")
         println("   Package Name: $oldPackageName -> $packageName")
         println("   Theme Name:   $oldThemeName -> $newThemeName")
         if (dryRun) println("   [DRY RUN MODE - No changes will be applied]")
@@ -100,7 +101,7 @@ abstract class BootstrapTask : DefaultTask() {
         // Precise transformations using Regex where possible
         val regexTransformations = listOf(
             Regex("rootProject\\.name\\s*=\\s*[\"']$oldProjectName[\"']") to "rootProject.name = \"$projectName\"",
-            Regex("<string name=\"app_name\">$oldDisplayName</string>") to "<string name=\"app_name\">$appDisplayName</string>",
+            Regex("<string name=\"app_name\">$oldDisplayName</string>") to "<string name=\"app_name\">$escapedAppDisplayName</string>",
             Regex("Theme\\.$oldProjectName") to "Theme.$projectName"
         )
 
@@ -112,6 +113,7 @@ abstract class BootstrapTask : DefaultTask() {
 
         logic.applyTransformations(stringTransformations, regexTransformations)
         logic.movePackageDirectories(oldPackageName, packageName)
+        logic.renameRoomSchemas(oldPackageName, packageName)
 
         if (!dryRun) {
             if (!starterPropertiesFile.delete()) {

@@ -12,7 +12,6 @@ import org.koin.test.KoinTest
 import org.koin.test.inject
 
 class NetworkKoinModuleTest : KoinTest {
-
     @After
     fun tearDown() {
         stopKoin()

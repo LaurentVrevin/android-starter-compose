@@ -24,46 +24,6 @@ abstract class BootstrapTask : DefaultTask() {
             throw GradleException("starter.properties not found in ${rootDir.absolutePath}")
         }
 
-        val scanner = Scanner(System.`in`)
-
-        // Try to get properties from -P, otherwise prompt user
-        var projectNameInput = project.findProperty("projectName")?.toString()
-        if (projectNameInput == null) {
-            print("Enter Gradle Project Name (e.g. Wheris): ")
-            projectNameInput = scanner.nextLine()
-        }
-
-        var appDisplayNameInput = project.findProperty("appDisplayName")?.toString()
-        if (appDisplayNameInput == null) {
-            print("Enter Application Display Name (e.g. Wheris): ")
-            appDisplayNameInput = scanner.nextLine()
-        }
-
-        var packageNameInput = project.findProperty("packageName")?.toString()
-        if (packageNameInput == null) {
-            print("Enter Android Package Name (e.g. com.laurentvrevin.wheris): ")
-            packageNameInput = scanner.nextLine()
-        }
-
-        val dryRun = project.findProperty("dryRun")?.toString() == "true"
-        var confirm = project.findProperty("confirm")?.toString() == "true"
-
-        if (projectNameInput.isNullOrBlank() || appDisplayNameInput.isNullOrBlank() || packageNameInput.isNullOrBlank()) {
-            throw GradleException("Project Name, Display Name and Package Name cannot be empty.")
-        }
-
-        val projectName: String = projectNameInput
-        val appDisplayName: String = appDisplayNameInput
-        val packageName: String = packageNameInput
-
-        val logic = BootstrapLogic(rootDir, dryRun)
-
-        try {
-            logic.validatePackageName(packageName)
-        } catch (e: IllegalArgumentException) {
-            throw GradleException(e.message ?: "Invalid parameters")
-        }
-
         val starterProperties = Properties().apply {
             starterPropertiesFile.inputStream().use { load(it) }
         }
@@ -72,6 +32,51 @@ abstract class BootstrapTask : DefaultTask() {
         val oldDisplayName = starterProperties.getProperty("starter.displayName") ?: ""
         val oldPackageName = starterProperties.getProperty("starter.packageName") ?: ""
         val oldThemeName = starterProperties.getProperty("starter.themeName") ?: ""
+
+        if (oldProjectName.isBlank() || oldDisplayName.isBlank() || oldPackageName.isBlank()) {
+            throw GradleException("Source properties in starter.properties cannot be empty.")
+        }
+
+        val scanner = Scanner(System.`in`)
+
+        var projectNameInput = project.findProperty("projectName")?.toString()
+        if (projectNameInput == null) {
+            print("Enter Gradle Project Name (PascalCase, e.g. Wheris): ")
+            projectNameInput = scanner.nextLine()
+        }
+
+        var appDisplayNameInput = project.findProperty("appDisplayName")?.toString()
+        if (appDisplayNameInput == null) {
+            print("Enter Application Display Name (e.g. Wheris App): ")
+            appDisplayNameInput = scanner.nextLine()
+        }
+
+        var packageNameInput = project.findProperty("packageName")?.toString()
+        if (packageNameInput == null) {
+            print("Enter Android Package Name (e.g. com.my.app): ")
+            packageNameInput = scanner.nextLine()
+        }
+
+        val dryRun = project.findProperty("dryRun")?.toString() == "true"
+        var confirm = project.findProperty("confirm")?.toString() == "true"
+
+        if (projectNameInput.isNullOrBlank() || appDisplayNameInput.isNullOrBlank() || packageNameInput.isNullOrBlank()) {
+            throw GradleException("Inputs cannot be empty.")
+        }
+
+        val projectName: String = projectNameInput.trim()
+        val appDisplayName: String = appDisplayNameInput.trim()
+        val packageName: String = packageNameInput.trim()
+
+        val logic = BootstrapLogic(rootDir, dryRun)
+
+        logic.validateProjectName(projectName)
+        logic.validatePackageName(packageName, oldPackageName)
+        
+        if (!dryRun) {
+            logic.checkConflicts(oldPackageName, packageName)
+        }
+
         val newThemeName = "Theme.$projectName"
 
         println("\n🚀 Bootstrapping project...")
@@ -93,15 +98,20 @@ abstract class BootstrapTask : DefaultTask() {
             return
         }
 
-        val transformations = listOf(
-            oldProjectName to projectName,
-            oldDisplayName to appDisplayName,
-            oldPackageName to packageName,
-            oldPackageName.replace(".", "/") to packageName.replace(".", "/"),
-            oldThemeName to newThemeName
+        // Precise transformations using Regex where possible
+        val regexTransformations = listOf(
+            Regex("rootProject\\.name\\s*=\\s*[\"']$oldProjectName[\"']") to "rootProject.name = \"$projectName\"",
+            Regex("<string name=\"app_name\">$oldDisplayName</string>") to "<string name=\"app_name\">$appDisplayName</string>",
+            Regex("Theme\\.$oldProjectName") to "Theme.$projectName"
         )
 
-        logic.applyTransformations(transformations)
+        val stringTransformations = listOf(
+            oldPackageName to packageName,
+            oldPackageName.replace(".", "/") to packageName.replace(".", "/"),
+            oldProjectName to projectName // Fallback
+        )
+
+        logic.applyTransformations(stringTransformations, regexTransformations)
         logic.movePackageDirectories(oldPackageName, packageName)
 
         if (!dryRun) {

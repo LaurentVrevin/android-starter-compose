@@ -1,4 +1,4 @@
-package com.laurentvrevin.androidstarter
+package com.laurentvrevin.buildlogic
 
 import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.Project

@@ -2,7 +2,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "com.laurentvrevin.androidstarter.buildlogic"
+group = "com.laurentvrevin.buildlogic"
 
 gradlePlugin {
     plugins {

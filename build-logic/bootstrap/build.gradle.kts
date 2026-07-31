@@ -2,7 +2,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "com.laurentvrevin.androidstarter.bootstrap"
+group = "com.laurentvrevin.bootstrap"
 
 gradlePlugin {
     plugins {

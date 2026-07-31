@@ -68,7 +68,7 @@ graph TD
 | Décision | Problème | Solution | Compromis |
 | :--- | :--- | :--- | :--- |
 | **Room comme SSOT** | L'UI scintille ou affiche des données périmées lors des transitions. | L'UI observe uniquement Room via des Flows. | Nécessite un mapping systématique Entity -> Model. |
-| **Koin** | Hilt impose trop de boilerplate et ralentit la compilation. | Koin est léger, pur Kotlin et facile à tester. | Pas de vérification à la compilation (contrairement à Hilt). |
+| **Koin** | Hilt impose trop de boilerplate et ralentit la compilation. | Koin est léger, pur Kotlin et facile à tester. | Pas de vérification à la compilation (contrairement à Hilt). Nécessite d'être vigilant sur l'enregistrement des modules techniques (ex: `configurationModule`). |
 | **Design System isolé** | Les styles sont dispersés et incohérents entre les écrans. | Centralisation des tokens et composants dans `:designsystem`. | Les features ne peuvent plus utiliser de couleurs arbitraires. |
 
 ---

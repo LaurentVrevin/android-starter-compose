@@ -6,16 +6,25 @@ Le projet utilise **Koin 4.x**, un framework d'injection de dépendances (DI) l�
 
 ## 🏗️ Initialisation
 
-Koin est démarré dans la classe `App` (située dans le module `:app`).
+Koin est démarré dans la classe `App` (située dans le module `:app`). Il est crucial d'y enregistrer **tous** les modules nécessaires au fonctionnement de l'application.
 
 ```kotlin
-// app/src/main/java/com/exemple/app/App.kt
+// app/src/main/java/com/laurentvrevin/androidstarter/App.kt
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
+
         startKoin {
+            androidLogger()
             androidContext(this@App)
-            modules(appModule, dataModule, networkModule, /* modules des features */)
+            modules(
+                configurationModule, // Fournit NetworkConfig
+                networkModule,       // Fournit HttpClient
+                dataModule,          // Database, DAOs, Preferences
+                designSystemModule,
+                templateModule,
+                appModule,
+            )
         }
     }
 }
@@ -27,23 +36,24 @@ class App : Application() {
 
 Les dépendances sont organisées par responsabilité.
 
-### Module Technique (`:data`)
-```kotlin
-val networkModule = module {
-    single { KtorClientFactory().create() }
-}
-```
+### Flux de la Couche Réseau
+La couche réseau illustre parfaitement la chaîne de dépendances dans Koin :
 
-### Module Feature (`:feature:template`)
-```kotlin
-val templateModule = module {
-    // Repository injectable
-    single<TemplateRepository> { TemplateRepositoryImpl(get()) }
-    
-    // ViewModel spécifique Koin
-    viewModel { TemplateViewModel(get()) }
-}
-```
+1.  **`configurationModule`** : Extrait les valeurs de `BuildConfig` (Base URL, debug mode) pour fournir un objet [`NetworkConfig`](../data/src/main/java/com/laurentvrevin/androidstarter/data/remote/NetworkConfig.kt).
+2.  **`networkModule`** : Demande ce `NetworkConfig` (via `get()`) pour configurer et fournir le `HttpClient` de Ktor.
+3.  **`repositories`** : Injectent le `HttpClient` pour effectuer les appels API.
+
+> [!CAUTION]
+> Si `configurationModule` est omis dans `App.kt`, le `networkModule` ne pourra pas résoudre `NetworkConfig`. L'erreur (exception de définition manquante) ne surviendra qu'au moment où le premier Repository tentera d'utiliser le client réseau.
+
+---
+
+## 🧪 Tests de Non-Régression
+
+Un test dédié vérifie l'intégrité du graphe Koin pour la partie réseau :
+[`NetworkKoinModuleTest.kt`](../app/src/test/java/com/laurentvrevin/androidstarter/di/NetworkKoinModuleTest.kt)
+
+Ce test charge `configurationModule` et `networkModule` pour s'assurer que `HttpClient` est résolvable. Il prend soin de fermer le client et d'arrêter Koin après l'exécution pour éviter les fuites entre les tests.
 
 ---
 
@@ -64,30 +74,11 @@ fun TaskRoute() {
 
 ---
 
-## 🧪 Injection dans les Tests
-
-Koin facilite grandement les tests en permettant de remplacer une dépendance réelle par un **Fake** ou un **Mock**.
-
-```kotlin
-class MyTest : KoinTest {
-    @Before
-    fun setup() {
-        startKoin {
-            modules(module {
-                single<TaskRepository> { FakeTaskRepository() } // On remplace le vrai repo
-            })
-        }
-    }
-}
-```
-
----
-
 ## 🚫 Anti-patterns
 
-1.  **Enorme module unique** : Ne mets pas tout dans `appModule`. Crée un module par feature.
-2.  **Utiliser get() partout** : Si ton constructeur a trop de `get()`, il est peut-être temps de découper ta classe.
-3.  **Inversion non respectée** : Déclare toujours tes interfaces dans le `domain` et injecte-les, plutôt que d'injecter directement l'implémentation du module `data`.
+1.  **Oubli de module technique** : Ne pas enregistrer les modules de configuration (comme `configurationModule`) casse silencieusement les dépendances techniques.
+2.  **Enorme module unique** : Ne mets pas tout dans `appModule`. Crée un module par feature.
+3.  **Inversion non respectée** : Déclare toujours tes interfaces dans le `domain` et injecte-les, plutôt que d'injecter directement l'implémentation.
 
 ---
-[Précédent : Navigation](navigation.md) | [Suivant : Données (Room & DataStore)](data.md)
+[Voir aussi : Couche Réseau](network.md) | [Précédent : Navigation](navigation.md) | [Suivant : Données](data.md)

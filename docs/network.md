@@ -8,10 +8,11 @@ Le starter utilise **Ktor Client 3.x** avec le moteur **OkHttp**, offrant une so
 
 La configuration centralisée se trouve dans [`KtorClientFactory.kt`](../data/src/main/java/com/laurentvrevin/androidstarter/data/remote/KtorClientFactory.kt).
 
-### Fonctionnalités activées :
--   **ContentNegotiation** : JSON via Kotlinx Serialization.
--   **Logging** : Activé uniquement en mode Debug via [`NetworkConfig`](../data/src/main/java/com/laurentvrevin/androidstarter/data/remote/NetworkConfig.kt).
--   **Timeouts** : Configurés à 15 secondes par défaut.
+### Dépendance à NetworkConfig
+Le `KtorClientFactory` a besoin d'un objet [`NetworkConfig`](../data/src/main/java/com/laurentvrevin/androidstarter/data/remote/NetworkConfig.kt) pour connaître la `baseUrl` et le niveau de log. Cet objet est automatiquement fourni par le **`configurationModule`** de Koin.
+
+> [!IMPORTANT]
+> Pour que le réseau fonctionne, assure-toi que `configurationModule` est bien déclaré dans ton fichier `App.kt`. Plus de détails dans le [Guide d'Injection de Dépendances](dependency_injection.md).
 
 ---
 
@@ -63,13 +64,6 @@ val mockClient = HttpClient(MockEngine) {
     }
 }
 ```
-
----
-
-## ⚠️ Sécurité
-
-1.  **Données sensibles** : Le logger `LogLevel.BODY` est activé en Debug. Assure-toi de ne pas loguer de jetons d'authentification ou de données privées en Production.
-2.  **HTTPS** : Android bloque les requêtes HTTP par défaut. Utilise toujours des endpoints sécurisés.
 
 ---
 [Précédent : Données](data.md) | [Suivant : Stratégie de Test](testing.md)

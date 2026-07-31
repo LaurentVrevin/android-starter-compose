@@ -6,7 +6,7 @@ Le Design System d'AndroidStarter est basé sur une architecture de **Tokens** e
 
 ## 1. Accès aux Tokens
 
-L'objet [**`AppTheme`**](../designsystem/src/main/java/com/laurentvrevin/androidstarter/designsystem/theme/AppDesignSystem.kt) est le point d'entrée unique. Toutes les valeurs sont injectées dynamiquement.
+L'objet [**`AppTheme`**](../designsystem/src/main/java/com/laurentvrevin/androidstarter/designsystem/theme/AppTheme.kt) est le point d'entrée unique. Toutes les valeurs sont injectées dynamiquement.
 
 ```kotlin
 // Spacing

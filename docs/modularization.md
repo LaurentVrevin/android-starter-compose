@@ -14,7 +14,7 @@ Feature verticale complète servant de modèle.
 ## 2. Créer une nouvelle Feature
 
 1. Créez un module `:feature:mony-feature`.
-2. Appliquez le plugin `androidstarter.android.library.compose`.
+2. Appliquez le plugin `com.laurentvrevin.android.library.compose`.
 3. Implémentez les couches `presentation`, `domain`, `data`.
 4. Enregistrez le module Koin dans `:app`.
 5. Ajoutez la route dans `AppNavHost`.

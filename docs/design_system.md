@@ -1,118 +1,93 @@
-# Documentation du Design System
+# Design System 🎨
 
-Le Design System d'AndroidStarter est basé sur une architecture de **Tokens** et l'**API Styles** de Jetpack Compose. Il permet une personnalisation totale sans modifier la structure des composants.
-
----
-
-## 1. Accès aux Tokens
-
-L'objet [**`AppTheme`**](../designsystem/src/main/java/com/laurentvrevin/androidstarter/designsystem/theme/AppTheme.kt) est le point d'entrée unique. Toutes les valeurs sont injectées dynamiquement.
-
-```kotlin
-// Spacing
-Modifier.padding(AppTheme.spacing.standard)
-
-// Shapes
-Modifier.clip(AppTheme.shapes.medium)
-
-// Typography
-Text(text = "Hello", style = AppTheme.typography.h1)
-```
-
-### Échelles disponibles
-- **Spacing** : `extraSmall` (4dp) à `tripleLarge` (48dp).
-- **Shapes** : `small`, `medium`, `large`, `extraLarge`, `pill`.
-- **Dimensions** : Hauteurs cibles pour `button`, `chip` et `icon`.
+Le module `:designsystem` est ton framework UI interne. Il garantit la cohérence visuelle et réduit drastiquement le temps de création des écrans.
 
 ---
 
-## 2. API Styles & Style Providers
+## 💎 Hiérarchie du Design System
 
-Chaque composant atomique est découplé de son apparence visuelle.
-
-### Fonctionnement
-Un composant comme `AppButton` demande son style au fournisseur via l'objet proxy `AppTheme` :
-```kotlin
-val buttonStyle = style ?: AppTheme.buttonStyles.primary(size)
-```
-
-### Personnalisation
-Pour changer l'apparence de TOUS les boutons de l'application, il suffit de modifier l'implémentation dans les Style Providers du module `:designsystem`.
-
-### Styles Providers disponibles via `AppTheme`
-- `AppTheme.buttonStyles`
-- `AppTheme.cardStyles`
-- `AppTheme.chipStyles`
-- `AppTheme.inputStyles`
-- `AppTheme.topBarStyles`
+1.  **Tokens (Fondations)** : Atomes visuels (couleurs, espacements, tailles).
+2.  **Styles** : Configuration des composants (ex: ButtonStylePrimary).
+3.  **Composants** : Éléments interactifs (Boutons, Cards, Inputs).
+4.  **Patterns** : Assemblages fréquents (Écran de base, Sections).
 
 ---
 
-## 3. Utilisation dans un écran ou un composant
+## 🪙 1. Les Tokens
 
-### Pour un composant personnalisé
-Si vous créez un nouveau composant, utilisez les **Tokens** via `AppTheme` pour garantir la cohérence :
+### Couleurs
+-   **Localisation** : `foundation/AppColorsScheme.kt`
+-   **Usage** : Utilise `AppTheme.colors.primary` plutôt que des valeurs hexadécimales.
+-   **Thème Dynamique** : Le starter supporte nativement le mode clair et sombre.
+
+### Spacing (Espacements)
+-   **Localisation** : `foundation/AppSpacing.kt`
+-   **Valeurs** : `extraSmall` (4dp), `small` (8dp), `medium` (12dp), `standard` (16dp), `large` (24dp), etc.
+-   **Règle** : N'utilise jamais de `8.dp` en dur dans tes features. Préfère `AppTheme.spacing.small`.
+
+### Typography
+-   **Localisation** : `theme/AppTypography.kt`
+-   **Échelles** : `display`, `h1`, `h2`, `titleLarge`, `bodyLarge`, `bodySmall`, `labelMedium`.
+
+---
+
+## 🏗️ 2. L'objet AppTheme
+
+C'est le point d'entrée unique. Il utilise des `CompositionLocal` pour injecter les tokens sans polluer les paramètres des fonctions.
 
 ```kotlin
-@Composable
-fun MyCustomComponent(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .background(AppTheme.colors.primaryContainer)
-            .padding(AppTheme.spacing.standard)
-            .clip(AppTheme.shapes.medium)
-    ) {
-        Text("Contenu", style = AppTheme.typography.bodyLarge)
-    }
-}
-```
-
-### Pour un écran complet
-Utilisez `AppTheme` comme wrapper racine dans votre `Activity` ou votre `Preview`. Pour la mise en page, privilégiez `AppTheme.spacing` pour les marges.
-
-```kotlin
-@Composable
-fun MyScreen() {
-    Scaffold(
-        topBar = { AppTopBar(title = "Mon Écran") }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .padding(AppTheme.spacing.standard)
-        ) {
-            AppPrimaryButton(text = "Action", onClick = {})
-        }
-    }
-}
+// Dans n'importe quel Composable d'une feature
+Text(
+    text = "Hello World",
+    color = AppTheme.colors.onBackground,
+    style = AppTheme.typography.h1
+)
 ```
 
 ---
 
-## 4. Composants de Feedback
+## 🧩 3. Les Composants
 
-### Snackbars (`AppSnackbar`)
-Gérées via le `FeedbackManager`. Supporte :
-- `Default`, `Success`, `Error`, `Warning`.
+Chaque composant est documenté interactivement dans le **Showcase**.
 
-### Loading Overlay (`LoadingOverlay`)
-Bloque l'interface pendant un chargement critique.
-```kotlin
-LoadingOverlay(isLoading = state.isLoading)
-```
+### Boutons (`components/button/`)
+-   `AppPrimaryButton` : Action principale.
+-   `AppSecondaryButton` : Action secondaire.
+-   `AppOutlinedButton` : Action tertiaire ou neutre.
+-   `AppDangerButton` : Actions destructrices (ex: Supprimer).
 
-### Empty State (`EmptyState`)
-Affiche un message et une action optionnelle quand une liste est vide.
+### Feedback & États (`components/feedback/`)
+-   `AppSnackbar` : Messages temporaires (Succès, Erreur).
+-   `EmptyState` : Affiché quand une liste est vide.
+-   `LoadingOverlay` : Bloque l'écran pendant un chargement long.
 
 ---
 
-## 4. Visualisation (Showcase)
+## 🖋️ 4. API de Styles
 
-L'écran [`ShowcaseScreen.kt`](../designsystem/src/main/java/com/laurentvrevin/androidstarter/designsystem/ShowcaseScreen.kt) permet de tester interactivement :
-- Le switch **Dark/Light Mode**.
-- Toutes les variantes de boutons et tailles.
-- Les échelles visuelles de spacing et shapes.
-- La simulation de synchronisation de données.
+Pour personnaliser l'apparence des composants (ex: arrondis des cartes), modifie les fichiers dans le package `styles/`.
+Le starter utilise une architecture basée sur l'**API Style expérimentale de Compose**, permettant de découpler la structure du composant de son style visuel.
 
-> [!IMPORTANT]
-> Avant d'utiliser un nouveau composant, vérifiez son rendu dans le Showcase en activant le mode sombre pour valider les contrastes.
+---
+
+## ♿ Accessibilité
+
+Le Design System impose :
+1.  **Tailles tactiles** : Minimum 48x48dp pour tous les boutons.
+2.  **Contrastes** : Respect des normes WCAG AA via les palettes Material 3.
+3.  **Sémantique** : Utilisation de `Modifier.semantics` et `contentDescription`.
+
+---
+
+## 📺 Le Showcase
+
+Le **Showcase** est un écran spécial qui affiche tous les composants et tokens. C'est l'outil parfait pour :
+1.  Vérifier le rendu d'un composant en mode sombre.
+2.  Tester la réactivité aux changements de thème.
+3.  Montrer les possibilités UI aux designers.
+
+**Comment le lancer ?** 
+Exécute l'application et clique sur le bouton "Showcase" sur l'écran de démarrage.
+
+---
+[Précédent : Guide Feature](feature_guide.md) | [Suivant : UI State & UDF](ui_state.md)

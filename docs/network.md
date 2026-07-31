@@ -1,45 +1,75 @@
-# Couche Réseau (Ktor)
+# Couche Réseau (Ktor 3) 🌐
 
-L'application utilise **Ktor Client** pour ses appels réseau, configuré de manière résiliente et sécurisée.
-
----
-
-## 1. Architecture
-
-La couche réseau est centralisée dans le module `:data`.
-
-- **`KtorClientFactory`** : Centralise la configuration (Serialization, Logging, Timeouts, Base URL).
-- **`NetworkConfig`** : Permet d'injecter des paramètres différents selon le build type (Debug/Release).
-- **`BaseRepository`** : Fournit la méthode `safeCall` pour sécuriser tous les appels API.
+Le starter utilise **Ktor Client 3.x** avec le moteur **OkHttp**, offrant une solution réseau moderne, performante et multiplateforme.
 
 ---
 
-## 2. Pattern de retour
+## 🛠️ Configuration (KtorClientFactory)
 
-Tous les appels API doivent être encapsulés dans un `NetworkResult<T>` via `safeCall`.
+La configuration centralisée se trouve dans [`KtorClientFactory.kt`](../data/src/main/java/com/laurentvrevin/androidstarter/data/remote/KtorClientFactory.kt).
+
+### Fonctionnalités activées :
+-   **ContentNegotiation** : JSON via Kotlinx Serialization.
+-   **Logging** : Activé uniquement en mode Debug via [`NetworkConfig`](../data/src/main/java/com/laurentvrevin/androidstarter/data/remote/NetworkConfig.kt).
+-   **Timeouts** : Configurés à 15 secondes par défaut.
+
+---
+
+## 🛡️ Appels sécurisés (safeCall)
+
+Tous les appels API doivent passer par la méthode `safeCall` de [`BaseRepository`](../data/src/main/java/com/laurentvrevin/androidstarter/data/base/BaseRepository.kt).
+
+Elle capture les exceptions réseau (401, 404, 500, pas d'internet) et les transforme en un objet [`NetworkResult`](../data/src/main/java/com/laurentvrevin/androidstarter/data/network/NetworkResult.kt).
 
 ```kotlin
-suspend fun fetchData(): NetworkResult<MyDto> = safeCall {
-    client.get("endpoint").body()
+// Dans ton Repository
+suspend fun fetchItems(): NetworkResult<List<ItemDto>> {
+    return safeCall {
+        client.get("items").body()
+    }
 }
 ```
 
-### Avantages :
-1.  **Gestion des erreurs typée** : Oblige à traiter les cas d'erreur (`Unauthorized`, `ServerError`, `NoInternet`).
-2.  **Sécurité Coroutines** : Propagera correctement la `CancellationException`.
-3.  **Logging** : Les erreurs techniques sont logguées proprement sans polluer l'UI.
+---
+
+## 🌍 Environnements (Base URL)
+
+L'URL de base de l'API est injectée via le fichier `build.gradle.kts` du module `:app` (BuildConfig).
+
+```kotlin
+// app/build.gradle.kts
+defaultConfig {
+    buildConfigField("String", "API_BASE_URL", "\"https://api.votre-serveur.com/\"")
+}
+```
 
 ---
 
-## 3. Configuration de production
+## 🧪 Simulation d'API (MockEngine)
 
-- **Logging** : Désactivé en production pour des raisons de sécurité et de performance.
-- **Timeouts** : Fixés à 15s par défaut pour éviter les appels bloqués.
-- **Serialization** : Utilise Kotlinx Serialization configuré avec `ignoreUnknownKeys = true`.
+Pour tester tes repositories sans serveur réel, utilise le **MockEngine** de Ktor.
+
+```kotlin
+// data/src/test/java/.../NetworkTest.kt
+val mockClient = HttpClient(MockEngine) {
+    engine {
+        addHandler { request ->
+            respond(
+                content = """{"id": 1, "name": "Test"}""",
+                status = HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, "application/json")
+            )
+        }
+    }
+}
+```
 
 ---
 
-## 4. Tests
+## ⚠️ Sécurité
 
-Utilisez le `MockEngine` de Ktor pour simuler des réponses API. 
-Voir l'exemple dans [**`NetworkTest.kt`**](../data/src/test/java/com/laurentvrevin/androidstarter/data/network/NetworkTest.kt).
+1.  **Données sensibles** : Le logger `LogLevel.BODY` est activé en Debug. Assure-toi de ne pas loguer de jetons d'authentification ou de données privées en Production.
+2.  **HTTPS** : Android bloque les requêtes HTTP par défaut. Utilise toujours des endpoints sécurisés.
+
+---
+[Précédent : Données](data.md) | [Suivant : Stratégie de Test](testing.md)

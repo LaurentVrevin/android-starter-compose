@@ -5,6 +5,7 @@ import com.laurentvrevin.androidstarter.data.di.dataModule
 import com.laurentvrevin.androidstarter.data.di.networkModule
 import com.laurentvrevin.androidstarter.designsystem.di.designSystemModule
 import com.laurentvrevin.androidstarter.di.appModule
+import com.laurentvrevin.androidstarter.di.configurationModule
 import com.laurentvrevin.androidstarter.feature.template.di.templateModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -17,7 +18,14 @@ class App : Application() {
         startKoin {
             androidLogger()
             androidContext(this@App)
-            modules(networkModule, dataModule, designSystemModule, templateModule, appModule)
+            modules(
+                configurationModule,
+                networkModule,
+                dataModule,
+                designSystemModule,
+                templateModule,
+                appModule,
+            )
         }
     }
 }

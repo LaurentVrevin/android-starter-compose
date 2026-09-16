@@ -1,75 +1,173 @@
 # Android Starter Pack 🚀
 
-Bienvenue dans ton **Android Starter Pack**. Ce projet est une base de démarrage robuste et moderne conçue pour accélérer le développement d'applications Android de qualité professionnelle.
+Bienvenue dans ton **Android Starter Pack**.
+
+Ce projet est une base de démarrage moderne et robuste conçue pour accélérer le développement d’applications Android professionnelles tout en conservant une architecture propre, modulaire et testable.
 
 ---
 
-## 🛠️ Stack Technique
+## 🛠️ Stack technique
 
-- **Kotlin 2.0** : Utilisation du compilateur K2.
-- **Jetpack Compose (BOM)** : Développement UI déclaratif.
-- **Material 3** : Design system moderne et accessible.
-- **Koin** : Injection de dépendances pragmatique.
-- **Ktor Client** : Réseau résilient et multiplateforme.
-- **Room & DataStore** : Persistance locale (Offline-First).
-- **Architecture Multi-module** : Scalabilité et isolation.
-
----
-
-## 📖 Parcours recommandé dans la documentation
-
-Pour tirer le meilleur parti de ce starter, nous te conseillons de lire la documentation dans l'ordre suivant :
-
-1.  📂 [**Vision d'Ensemble**](docs/overview.md) : Comprendre les buts et le flux du projet.
-2.  🏛️ [**Architecture**](docs/architecture.md) : Découvrir les principes Clean et MVVM appliqués.
-3.  📦 [**Modularisation**](docs/modularization.md) : Structure et responsabilités des modules.
-4.  🚀 [**Guide de création de Feature**](docs/feature_guide.md) : Tutoriel pas à pas pour tes propres écrans.
-5.  🎨 [**Design System**](docs/design_system.md) : Tokens, Styles et Composants.
-6.  🔄 [**UI State & UDF**](docs/ui_state.md) : Gestion de l'état et de la réactivité.
-7.  🗺️ [**Navigation**](docs/navigation.md) : Routes typées et graphe global.
-8.  💉 [**Injection de Dépendances**](docs/dependency_injection.md) : Utilisation de Koin.
-9.  💾 [**Données (Room & DataStore)**](docs/data.md) : Persistance et SSOT.
-10. 🌐 [**Réseau (Ktor)**](docs/network.md) : Configuration et appels sécurisés.
-11. 🧪 [**Stratégie de Test**](docs/testing.md) : Unitaires, instrumentés et UI.
-12. 🛠️ [**Logique de Build**](docs/build_logic.md) : Convention plugins Gradle.
-13. 🚩 [**Bootstrap**](docs/bootstrap.md) : **À LIRE AVANT DE DÉMARRER.**
-14. 🆘 [**Dépannage**](docs/troubleshooting.md) : Solutions aux problèmes courants.
+- **Kotlin 2.x**
+- **Jetpack Compose**
+- **Material 3**
+- **Koin**
+- **Ktor Client**
+- **Room**
+- **DataStore**
+- **Navigation Compose**
+- **Coroutines / Flow / StateFlow**
+- **Architecture multi-module**
+- **Gradle Convention Plugins**
+- **Version Catalog**
+- **JUnit / Compose UI Tests**
+- **ktlint**
 
 ---
 
-## 🚀 Démarrage Rapide (Bootstrap)
+## 📖 Documentation
 
-Pour transformer ce template en ton propre projet :
+Pour comprendre le starter plus en détail :
 
-1.  Sur GitHub, clique sur **"Use this template"**.
-2.  Clone ton nouveau dépôt.
-3.  Lance la tâche interactive à la racine :
+1. 📂 [**Vision d’ensemble**](docs/overview.md)
+2. 🏛️ [**Architecture**](docs/architecture.md)
+3. 📦 [**Modularisation**](docs/modularization.md)
+4. 🚀 [**Guide de création de Feature**](docs/feature_guide.md)
+5. 🎨 [**Design System**](docs/design_system.md)
+6. 🔄 [**UI State & UDF**](docs/ui_state.md)
+7. 🗺️ [**Navigation**](docs/navigation.md)
+8. 💉 [**Injection de dépendances**](docs/dependency_injection.md)
+9. 💾 [**Données**](docs/data.md)
+10. 🌐 [**Réseau**](docs/network.md)
+11. 🧪 [**Tests**](docs/testing.md)
+12. 🛠️ [**Build Logic**](docs/build_logic.md)
+13. 🚩 [**Bootstrap**](docs/bootstrap.md)
+14. 🆘 [**Dépannage**](docs/troubleshooting.md)
 
-**Windows :**
+---
+
+## 🚀 Démarrage rapide
+
+Pour transformer ce starter en ton propre projet :
+
+1. Sur GitHub, clique sur **Use this template**.
+2. Choisis **Create a new repository**.
+3. Donne un nom à ton nouveau repository, par exemple `MonApp`.
+4. Copie l’URL Git du nouveau repository.
+5. Dans Android Studio, utilise **Clone Repository** et colle l’URL.
+6. Une fois le projet ouvert, lance d’abord un Dry Run du bootstrap.
+
+### Windows
+
 ```powershell
-.\gradlew.bat bootstrapProject
+.\gradlew.bat --console=plain bootstrapProject "-PdryRun=true"
 ```
 
-**macOS / Linux :**
+### macOS / Linux
+
 ```bash
-./gradlew bootstrapProject
+./gradlew --console=plain bootstrapProject -PdryRun=true
 ```
 
-4.  Suis les instructions et confirme avec `y`.
-5.  Fais un **Gradle Sync** dans Android Studio.
+Renseigne ensuite les informations demandées.
+
+Exemple :
+
+```text
+Project Name: MonApp
+Display Name: Mon App
+Package Name: com.prenomnom.monapp
+```
+
+Si le Dry Run se termine par :
+
+```text
+BUILD SUCCESSFUL
+```
+
+tu peux lancer le vrai bootstrap.
+
+### Windows
+
+```powershell
+.\gradlew.bat --console=plain bootstrapProject
+```
+
+### macOS / Linux
+
+```bash
+./gradlew --console=plain bootstrapProject
+```
+
+Utilise les mêmes valeurs, puis confirme avec `y`.
+
+Enfin :
+
+1. fais un **Gradle Sync** ;
+2. vérifie que le projet compile.
+
+### Windows
+
+```powershell
+.\gradlew.bat :app:assembleDebug
+```
+
+### macOS / Linux
+
+```bash
+./gradlew :app:assembleDebug
+```
+
+Le projet est prêt lorsque tu obtiens :
+
+```text
+BUILD SUCCESSFUL
+```
 
 > [!IMPORTANT]
-> Pour plus de détails sur les formats attendus et la sécurité, consulte le [**Guide de Bootstrap**](docs/bootstrap.md).
+> Pour le guide complet, les captures d’écran, les explications du Dry Run, le JDK, le dépannage et les cas d’erreur, consulte :
+>
+> [**Guide détaillé du Bootstrap**](docs/bootstrap.md)
 
 ---
 
 ## 🛠️ Commandes principales
 
-- **Initialisation** : `./gradlew bootstrapProject`
-- **Compilation** : `./gradlew :app:assembleDebug`
-- **Tests** : `./gradlew test`
-- **Lint** : `./gradlew ktlintCheck`
+### Bootstrap
+
+```bash
+./gradlew bootstrapProject
+```
+
+### Compilation
+
+```bash
+./gradlew :app:assembleDebug
+```
+
+### Tests
+
+```bash
+./gradlew test
+```
+
+### Lint
+
+```bash
+./gradlew ktlintCheck
+```
 
 ---
 
-*Développé avec passion pour des applications Android performantes.*
+## ❤️ Android Starter Pack
+
+Ce starter a été conçu pour fournir une base Android :
+
+- propre ;
+- moderne ;
+- maintenable ;
+- testable ;
+- modulaire ;
+- réutilisable.
+
+L’objectif est de supprimer le travail répétitif de démarrage afin de te permettre de te concentrer rapidement sur ton application.
